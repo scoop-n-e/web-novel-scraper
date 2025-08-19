@@ -1,11 +1,15 @@
 [package]
 name = "web-novel-scraper"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+
+[[bin]]
+name = "fetch"
+path = "src/bin/fetch.rs"
 
 [dependencies]
-reqwest = { version = "0.12", features = ["blocking", "cookies"] }
-scraper = "0.22"
+reqwest = { version = "0.12", features = ["cookies", "json"] }
 fake-useragent = "0.1"
 tokio = { version = "1", features = ["full"] }
 anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
