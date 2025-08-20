@@ -28,8 +28,9 @@ impl NarouNovelApi {
         if let Some(notword) = params.notword {
             query.insert("notword".to_string(), notword);
         }
+        // titleパラメータは検索範囲指定（word/notwordの対象指定）
         if let Some(title) = params.title {
-            query.insert("title".to_string(), title);
+            query.insert("title".to_string(), if title { "1" } else { "0" }.to_string());
         }
         if let Some(writer) = params.writer {
             query.insert("writer".to_string(), writer);
@@ -224,7 +225,7 @@ pub struct NovelSearchParams {
     // 検索条件
     pub word: Option<String>,  // 検索単語（スペース区切りでAND検索）
     pub notword: Option<String>,  // 除外単語（スペース区切り）
-    pub title: Option<String>,  // タイトル検索
+    pub title: Option<bool>,  // タイトルをword/notwordの検索対象にするかのフラグ
     pub writer: Option<String>,  // 作者名検索
     pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
     
