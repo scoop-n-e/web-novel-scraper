@@ -99,11 +99,11 @@ impl NocturneNovelApi {
         if let Some(length) = params.length {
             query.insert("length".to_string(), length);
         } else {
-            if let Some(length_min) = params.length_min {
-                query.insert("minlen".to_string(), length_min.to_string());
+            if let Some(minlen) = params.minlen {
+                query.insert("minlen".to_string(), minlen.to_string());
             }
-            if let Some(length_max) = params.length_max {
-                query.insert("maxlen".to_string(), length_max.to_string());
+            if let Some(maxlen) = params.maxlen {
+                query.insert("maxlen".to_string(), maxlen.to_string());
             }
         }
         
@@ -273,8 +273,8 @@ pub struct NocturneSearchParams {
     
     // 文字数フィルタ（length指定時はmin/maxは無視）
     pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
-    pub length_min: Option<u32>,  // 最小文字数
-    pub length_max: Option<u32>,  // 最大文字数
+    pub minlen: Option<u32>,  // 最小文字数
+    pub maxlen: Option<u32>,  // 最大文字数
     
     // 読了時間フィルタ（文字数フィルタと併用不可）
     pub time: Option<String>,  // 読了時間範囲（分単位）

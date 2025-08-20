@@ -17,20 +17,27 @@ impl NarouRankinApi {
     }
 
     /// 殿堂入り情報を取得
-    pub async fn get_rankin(&self, ncode: &str) -> Result<NarouRankinResponse> {
+    pub async fn get_rankin(&self, ncode: &str, gzip: Option<u8>) -> Result<NarouRankinResponse> {
         let mut query = HashMap::new();
         query.insert("out".to_string(), "json".to_string());
         query.insert("ncode".to_string(), ncode.to_uppercase());  // Ncodeは大文字に正規化
+        
+        // gzip圧縮対応
+        if let Some(level) = gzip {
+            if (1..=5).contains(&level) {
+                query.insert("gzip".to_string(), level.to_string());
+            }
+        }
         
         self.client.request_single(&self.base_url, &query).await
     }
 
     /// 複数作品の殿堂入り情報を一括取得
-    pub async fn get_rankin_batch(&self, ncodes: Vec<&str>) -> Result<Vec<(String, Result<NarouRankinResponse>)>> {
+    pub async fn get_rankin_batch(&self, ncodes: Vec<&str>, gzip: Option<u8>) -> Result<Vec<(String, Result<NarouRankinResponse>)>> {
         let mut results = Vec::new();
         
         for ncode in ncodes {
-            let result = self.get_rankin(ncode).await;
+            let result = self.get_rankin(ncode, gzip).await;
             results.push((ncode.to_string(), result));
         }
         

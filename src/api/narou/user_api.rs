@@ -25,14 +25,17 @@ impl NarouUserApi {
         if let Some(word) = params.word {
             query.insert("word".to_string(), word);
         }
+        if let Some(notword) = params.notword {
+            query.insert("notword".to_string(), notword);
+        }
         if let Some(userid) = params.userid {
             query.insert("userid".to_string(), userid.to_string());
         }
         if let Some(name) = params.name {
             query.insert("name".to_string(), name);
         }
-        if let Some(initial) = params.initial {
-            query.insert("initial".to_string(), initial);
+        if let Some(name1st) = params.name1st {
+            query.insert("name1st".to_string(), name1st);
         }
         
         // フィルタ条件
@@ -100,9 +103,10 @@ impl NarouUserApi {
 pub struct UserSearchParams {
     // 検索条件
     pub word: Option<String>,  // 検索単語
+    pub notword: Option<String>,  // 除外単語
     pub userid: Option<u32>,  // ユーザーID指定（-区切りで複数指定可）
     pub name: Option<String>,  // ユーザー名指定
-    pub initial: Option<String>,  // 頭文字指定（ひらがな・カタカナ・英数字・その他）
+    pub name1st: Option<String>,  // 頭文字指定（ひらがな・カタカナ・英数字・その他）
     
     // フィルタ条件
     pub novel_min: Option<u32>,  // 作品投稿数最小

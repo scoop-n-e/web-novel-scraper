@@ -49,6 +49,9 @@ impl NarouNovelApi {
         if let Some(notbiggenre) = params.notbiggenre {
             query.insert("notbiggenre".to_string(), notbiggenre.to_string());
         }
+        if let Some(notgenre) = params.notgenre {
+            query.insert("notgenre".to_string(), notgenre);
+        }
         
         // 詳細フィルタ
         if let Some(istensei) = params.istensei {
@@ -60,8 +63,8 @@ impl NarouNovelApi {
         if let Some(istt) = params.istt {
             query.insert("istt".to_string(), if istt { "1" } else { "0" }.to_string());
         }
-        if let Some(isstop) = params.isstop {
-            query.insert("stop".to_string(), if isstop { "1" } else { "0" }.to_string());
+        if let Some(stop) = params.stop {
+            query.insert("stop".to_string(), stop.to_string());
         }
         if let Some(isbl) = params.isbl {
             query.insert("isbl".to_string(), if isbl { "1" } else { "0" }.to_string());
@@ -115,6 +118,13 @@ impl NarouNovelApi {
         // 読了時間フィルタ
         if let Some(time) = params.time {
             query.insert("time".to_string(), time);
+        } else {
+            if let Some(mintime) = params.mintime {
+                query.insert("mintime".to_string(), mintime.to_string());
+            }
+            if let Some(maxtime) = params.maxtime {
+                query.insert("maxtime".to_string(), maxtime.to_string());
+            }
         }
         
         // 最終更新日時フィルタ
@@ -202,12 +212,13 @@ pub struct NovelSearchParams {
     pub genre: Option<u32>,  // ジャンル指定
     pub biggenre: Option<u32>,  // 大ジャンル指定
     pub notbiggenre: Option<u32>,  // 大ジャンル除外
+    pub notgenre: Option<String>,  // ジャンル除外（-区切りで複数指定可）
     
     // 詳細フィルタ
     pub istensei: Option<bool>,  // 転生要素
     pub istenni: Option<bool>,  // 転移要素
     pub istt: Option<bool>,  // 転生または転移要素
-    pub isstop: Option<bool>,  // 長期連載停止中
+    pub stop: Option<u32>,  // 0:連載中含む, 1:長期連載停止除外, 2:長期連載停止のみ
     pub isbl: Option<bool>,  // ボーイズラブ
     pub isgl: Option<bool>,  // ガールズラブ
     pub iszankoku: Option<bool>,  // 残酷な描写あり
@@ -232,6 +243,8 @@ pub struct NovelSearchParams {
     
     // 読了時間フィルタ（分単位、文字数フィルタと併用不可）
     pub time: Option<String>,  // 読了時間範囲（例: "5-10", "60-", "30"）
+    pub mintime: Option<u32>,  // 最小読了時間（分）
+    pub maxtime: Option<u32>,  // 最大読了時間（分）
     
     // 最終更新日時フィルタ
     pub lastup: Option<String>,  // 最終更新日時（YYYYMMDDhhmmss形式）
