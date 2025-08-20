@@ -37,16 +37,16 @@ impl NarouUserApi {
         
         // フィルタ条件
         if let Some(novel_min) = params.novel_min {
-            query.insert("novel".to_string(), novel_min.to_string());
+            query.insert("minnovel".to_string(), novel_min.to_string());
         }
         if let Some(novel_max) = params.novel_max {
-            query.insert("novel2".to_string(), novel_max.to_string());
+            query.insert("maxnovel".to_string(), novel_max.to_string());
         }
         if let Some(review_min) = params.review_min {
-            query.insert("review".to_string(), review_min.to_string());
+            query.insert("minreview".to_string(), review_min.to_string());
         }
         if let Some(review_max) = params.review_max {
-            query.insert("review2".to_string(), review_max.to_string());
+            query.insert("maxreview".to_string(), review_max.to_string());
         }
         
         // 出力制御
