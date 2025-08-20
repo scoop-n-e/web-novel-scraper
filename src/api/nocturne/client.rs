@@ -18,7 +18,7 @@ impl NocturneApiClient {
         })
     }
 
-    pub async fn request<T: DeserializeOwned>(&self, url: &str, params: &HashMap<String, String>) -> Result<T> {
+    pub async fn request<T: DeserializeOwned>(&self, url: &str, params: &HashMap<String, String>) -> Result<Vec<T>> {
         let response = self.client.get(url)
             .query(&params)
             .send()
@@ -36,9 +36,20 @@ impl NocturneApiClient {
             anyhow::bail!("Empty response from Nocturne API");
         }
         
-        // JSONパース
-        serde_json::from_str(&text)
-            .with_context(|| format!("Failed to parse Nocturne API response: {}", &text[..text.len().min(500)]))
+        // JSONパース - APIは配列形式で、最初の要素はallcountなので、2番目以降を返す
+        let mut results: Vec<serde_json::Value> = serde_json::from_str(&text)
+            .with_context(|| format!("Failed to parse Nocturne API response: {}", &text[..text.len().min(500)]))?;
+        
+        // 最初の要素（allcount）を除く
+        if !results.is_empty() {
+            results.remove(0);
+        }
+        
+        // 各要素をデシリアライズ
+        results.into_iter()
+            .map(|v| serde_json::from_value(v))
+            .collect::<Result<Vec<T>, _>>()
+            .with_context(|| "Failed to deserialize Nocturne API response")
     }
 
     pub async fn request_with_gzip<T: DeserializeOwned>(
@@ -46,7 +57,7 @@ impl NocturneApiClient {
         url: &str, 
         params: &mut HashMap<String, String>,
         gzip_level: Option<u8>
-    ) -> Result<T> {
+    ) -> Result<Vec<T>> {
         // gzip圧縮レベルを指定（1-5）
         if let Some(level) = gzip_level {
             if (1..=5).contains(&level) {

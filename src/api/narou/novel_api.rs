@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use std::collections::HashMap;
 use crate::api::narou::{NarouApiClient, NarouNovel, NarouOrder};
 
@@ -48,6 +48,66 @@ impl NarouNovelApi {
         }
         if let Some(notbiggenre) = params.notbiggenre {
             query.insert("notbiggenre".to_string(), notbiggenre.to_string());
+        }
+        
+        // 詳細フィルタ
+        if let Some(istensei) = params.istensei {
+            query.insert("istensei".to_string(), if istensei { "1" } else { "0" }.to_string());
+        }
+        if let Some(istenni) = params.istenni {
+            query.insert("istenni".to_string(), if istenni { "1" } else { "0" }.to_string());
+        }
+        if let Some(isstop) = params.isstop {
+            query.insert("stop".to_string(), if isstop { "1" } else { "0" }.to_string());
+        }
+        if let Some(isbl) = params.isbl {
+            query.insert("isbl".to_string(), if isbl { "1" } else { "0" }.to_string());
+        }
+        if let Some(isgl) = params.isgl {
+            query.insert("isgl".to_string(), if isgl { "1" } else { "0" }.to_string());
+        }
+        if let Some(iszankoku) = params.iszankoku {
+            query.insert("iszankoku".to_string(), if iszankoku { "1" } else { "0" }.to_string());
+        }
+        if let Some(isr15) = params.isr15 {
+            query.insert("isr15".to_string(), if isr15 { "1" } else { "0" }.to_string());
+        }
+        
+        // 文字数フィルタ
+        if let Some(length) = params.length {
+            query.insert("length".to_string(), length);
+        } else {
+            if let Some(minlen) = params.minlen {
+                query.insert("minlen".to_string(), minlen.to_string());
+            }
+            if let Some(maxlen) = params.maxlen {
+                query.insert("maxlen".to_string(), maxlen.to_string());
+            }
+        }
+        
+        // 会話率フィルタ
+        if let Some(kaiwaritu) = params.kaiwaritu {
+            query.insert("kaiwaritu".to_string(), kaiwaritu);
+        }
+        
+        // 挿絵数フィルタ
+        if let Some(sasie) = params.sasie {
+            query.insert("sasie".to_string(), sasie);
+        }
+        
+        // 読了時間フィルタ
+        if let Some(time) = params.time {
+            query.insert("time".to_string(), time);
+        }
+        
+        // 最終更新日時フィルタ
+        if let Some(lastup) = params.lastup {
+            query.insert("lastup".to_string(), lastup);
+        }
+        
+        // タイプフィルタ
+        if let Some(novel_type) = params.novel_type {
+            query.insert("type".to_string(), novel_type);
         }
         
         // 出力制御
@@ -118,9 +178,38 @@ pub struct NovelSearchParams {
     pub biggenre: Option<u32>,  // 大ジャンル指定
     pub notbiggenre: Option<u32>,  // 大ジャンル除外
     
+    // 詳細フィルタ
+    pub istensei: Option<bool>,  // 転生要素
+    pub istenni: Option<bool>,  // 転移要素
+    pub isstop: Option<bool>,  // 長期連載停止中
+    pub isbl: Option<bool>,  // ボーイズラブ
+    pub isgl: Option<bool>,  // ガールズラブ
+    pub iszankoku: Option<bool>,  // 残酷な描写あり
+    pub isr15: Option<bool>,  // R15作品
+    
+    // 文字数フィルタ（length指定時はminlen/maxlenは無視）
+    pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
+    pub minlen: Option<u32>,  // 最小文字数
+    pub maxlen: Option<u32>,  // 最大文字数
+    
+    // 会話率フィルタ
+    pub kaiwaritu: Option<String>,  // 会話率範囲（例: "10-50", "50-", "30"）
+    
+    // 挿絵数フィルタ
+    pub sasie: Option<String>,  // 挿絵数範囲（例: "1-5", "1-", "3"）
+    
+    // 読了時間フィルタ（分単位、文字数フィルタと併用不可）
+    pub time: Option<String>,  // 読了時間範囲（例: "5-10", "60-", "30"）
+    
+    // 最終更新日時フィルタ
+    pub lastup: Option<String>,  // 最終更新日時（YYYYMMDDhhmmss形式）
+    
+    // タイプフィルタ
+    pub novel_type: Option<String>,  // "t": 短編, "r": 連載中, "er": 完結済連載
+    
     // 出力制御
     pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）
     pub start: Option<u32>,  // 表示開始位置（1-2000）
     pub order: Option<NarouOrder>,  // ソート順
-    pub of: Option<String>,  // 出力項目指定（t-n-u-w-s-bg-g-k-gf-gl-nt-e-ga-l-ti-isr15-isbl-isgl-izk-its-iti）
+    pub of: Option<String>,  // 出力項目指定
 }
