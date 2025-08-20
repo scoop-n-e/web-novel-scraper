@@ -18,9 +18,28 @@ impl NarouRankinApi {
 
     /// 殿堂入り情報を取得
     pub async fn get_rankin(&self, ncode: &str, gzip: Option<u8>) -> Result<NarouRankinResponse> {
+        self.get_rankin_with_options(ncode, gzip, None, None).await
+    }
+    
+    /// 殿堂入り情報を取得（拡張オプション付き）
+    pub async fn get_rankin_with_options(
+        &self, 
+        ncode: &str, 
+        gzip: Option<u8>,
+        libtype: Option<u8>,
+        callback: Option<String>
+    ) -> Result<NarouRankinResponse> {
         let mut query = HashMap::new();
         query.insert("out".to_string(), "json".to_string());
         query.insert("ncode".to_string(), ncode.to_uppercase());  // Ncodeは大文字に正規化
+        
+        // 出力形式制御（注：現在はJSON固定のため、これらのパラメータは効果なし）
+        if let Some(libtype) = libtype {
+            query.insert("libtype".to_string(), libtype.to_string());
+        }
+        if let Some(callback) = callback {
+            query.insert("callback".to_string(), callback);
+        }
         
         // gzip圧縮対応
         if let Some(level) = gzip {

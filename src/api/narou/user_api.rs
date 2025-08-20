@@ -66,6 +66,14 @@ impl NarouUserApi {
             query.insert("of".to_string(), of);
         }
         
+        // 出力形式制御（注：現在はJSON固定のため、これらのパラメータは効果なし）
+        if let Some(libtype) = params.libtype {
+            query.insert("libtype".to_string(), libtype.to_string());
+        }
+        if let Some(callback) = params.callback {
+            query.insert("callback".to_string(), callback);
+        }
+        
         // gzip圧縮対応
         if let Some(gzip_level) = params.gzip {
             self.client.request_with_gzip(&self.base_url, &mut query, Some(gzip_level)).await
@@ -119,6 +127,10 @@ pub struct UserSearchParams {
     pub start: Option<u32>,  // 表示開始位置（1-2000）
     pub order: Option<String>,  // ソート順（userid, name, novel, review, sumglobalpoint）
     pub of: Option<String>,  // 出力項目指定（u-n-y-nc-rc-nl-sg）
+    
+    // 出力形式制御（注：パラメータは送信されるが、レスポンス処理は未実装）
+    pub libtype: Option<u8>,  // YAMLライブラリ選択（1:従来、2:新ライブラリ）※YAML出力未対応
+    pub callback: Option<String>,  // JSONP用コールバック関数名 ※JSONP出力未対応
     
     // gzip圧縮
     pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）

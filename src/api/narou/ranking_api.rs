@@ -18,6 +18,18 @@ impl NarouRankingApi {
 
     /// ランキングを取得
     pub async fn get_ranking(&self, ranking_type: RankingType, date: Option<String>, gzip: Option<u8>) -> Result<Vec<NarouRankingItem>> {
+        self.get_ranking_with_options(ranking_type, date, gzip, None, None).await
+    }
+    
+    /// ランキングを取得（拡張オプション付き）
+    pub async fn get_ranking_with_options(
+        &self, 
+        ranking_type: RankingType, 
+        date: Option<String>, 
+        gzip: Option<u8>,
+        libtype: Option<u8>,
+        callback: Option<String>
+    ) -> Result<Vec<NarouRankingItem>> {
         let mut query = HashMap::new();
         query.insert("out".to_string(), "json".to_string());
         
@@ -27,6 +39,14 @@ impl NarouRankingApi {
             ranking_type.as_str()
         );
         query.insert("rtype".to_string(), rtype);
+        
+        // 出力形式制御（注：現在はJSON固定のため、これらのパラメータは効果なし）
+        if let Some(libtype) = libtype {
+            query.insert("libtype".to_string(), libtype.to_string());
+        }
+        if let Some(callback) = callback {
+            query.insert("callback".to_string(), callback);
+        }
         
         // gzip圧縮対応
         if let Some(gzip_level) = gzip {
