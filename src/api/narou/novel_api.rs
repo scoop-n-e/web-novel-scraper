@@ -104,6 +104,15 @@ impl NarouNovelApi {
         if let Some(notr15) = params.notr15 {
             query.insert("notr15".to_string(), if notr15 { "1" } else { "0" }.to_string());
         }
+        if let Some(notbl) = params.notbl {
+            query.insert("notbl".to_string(), if notbl { "1" } else { "0" }.to_string());
+        }
+        if let Some(notgl) = params.notgl {
+            query.insert("notgl".to_string(), if notgl { "1" } else { "0" }.to_string());
+        }
+        if let Some(notzankoku) = params.notzankoku {
+            query.insert("notzankoku".to_string(), if notzankoku { "1" } else { "0" }.to_string());
+        }
         
         // 文字数フィルタ
         if let Some(length) = params.length {
@@ -255,6 +264,9 @@ pub struct NovelSearchParams {
     pub nottensei: Option<bool>,  // 転生要素除外
     pub nottenni: Option<bool>,  // 転移要素除外
     pub notr15: Option<bool>,  // R15作品除外
+    pub notbl: Option<bool>,  // ボーイズラブ除外
+    pub notgl: Option<bool>,  // ガールズラブ除外
+    pub notzankoku: Option<bool>,  // 残酷な描写除外
     
     // 文字数フィルタ（length指定時はminlen/maxlenは無視）
     pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
