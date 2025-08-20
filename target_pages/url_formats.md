@@ -11,7 +11,7 @@ https://ncode.syosetu.com/{{ncode}}/
 ## 長編
 
 ```
-https://ncode.syosetu.com/{{ncode}}/{{num}}/
+https://ncode.syosetu.com/{{ncode}}/{{episode_num}}/
 ```
 
 ## 短編
@@ -60,7 +60,7 @@ https://novel18.syosetu.com/{{ncode}}/
 ## 小説本文
 
 ```
-https://novel18.syosetu.com/{{ncode}}/{{num}}/
+https://novel18.syosetu.com/{{ncode}}/{{episode_num}}/
 ```
 
 ## 評価ページ
