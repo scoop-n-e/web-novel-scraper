@@ -1,11 +1,14 @@
 use anyhow::Result;
 use fake_useragent::UserAgents;
+use rand::Rng;
 use reqwest::{
     cookie::Jar,
     header::{HeaderMap, HeaderValue, COOKIE, USER_AGENT},
     Client, StatusCode, Url,
 };
 use std::sync::{Arc, RwLock};
+use std::time::{Duration, Instant};
+use tokio::time::sleep;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum UserAgentMode {
@@ -19,11 +22,63 @@ impl Default for UserAgentMode {
     }
 }
 
+#[derive(Clone, Debug)]
+pub struct RequestDelayConfig {
+    min_delay_ms: u64,
+    max_delay_ms: u64,
+    enabled: bool,
+}
+
+impl Default for RequestDelayConfig {
+    fn default() -> Self {
+        Self {
+            min_delay_ms: 1000,
+            max_delay_ms: 3000,
+            enabled: true,
+        }
+    }
+}
+
+impl RequestDelayConfig {
+    pub fn new(min_delay_ms: u64, max_delay_ms: u64) -> Self {
+        assert!(min_delay_ms <= max_delay_ms, "min_delay must be <= max_delay");
+        Self {
+            min_delay_ms,
+            max_delay_ms,
+            enabled: true,
+        }
+    }
+
+    pub fn disabled() -> Self {
+        Self {
+            min_delay_ms: 0,
+            max_delay_ms: 0,
+            enabled: false,
+        }
+    }
+
+    fn get_random_delay(&self) -> Duration {
+        if !self.enabled {
+            return Duration::from_millis(0);
+        }
+
+        if self.min_delay_ms == self.max_delay_ms {
+            return Duration::from_millis(self.min_delay_ms);
+        }
+
+        let mut rng = rand::thread_rng();
+        let delay_ms = rng.gen_range(self.min_delay_ms..=self.max_delay_ms);
+        Duration::from_millis(delay_ms)
+    }
+}
+
 #[derive(Clone)]
 pub struct HtmlFetcher {
     client: Client,
     cookie_jar: Arc<Jar>,
     user_agent_mode: Arc<RwLock<UserAgentMode>>,
+    delay_config: Arc<RwLock<RequestDelayConfig>>,
+    last_request_time: Arc<RwLock<Option<Instant>>>,
 }
 
 pub struct FetchOptions<'a> {
@@ -68,6 +123,8 @@ impl HtmlFetcher {
             client,
             cookie_jar,
             user_agent_mode: Arc::new(RwLock::new(mode)),
+            delay_config: Arc::new(RwLock::new(RequestDelayConfig::default())),
+            last_request_time: Arc::new(RwLock::new(None)),
         })
     }
 
@@ -106,6 +163,52 @@ impl HtmlFetcher {
 
     pub fn get_mode(&self) -> UserAgentMode {
         self.user_agent_mode.read().unwrap().clone()
+    }
+
+    pub fn set_delay_config(&self, config: RequestDelayConfig) {
+        *self.delay_config.write().unwrap() = config;
+    }
+
+    pub fn get_delay_config(&self) -> RequestDelayConfig {
+        self.delay_config.read().unwrap().clone()
+    }
+
+    pub fn disable_delay(&self) {
+        self.delay_config.write().unwrap().enabled = false;
+    }
+
+    pub fn enable_delay(&self) {
+        self.delay_config.write().unwrap().enabled = true;
+    }
+
+    async fn apply_request_delay(&self) {
+        let config = self.delay_config.read().unwrap().clone();
+        if !config.enabled {
+            return;
+        }
+
+        let delay = config.get_random_delay();
+        
+        let should_wait = {
+            let mut last_time = self.last_request_time.write().unwrap();
+            if let Some(last) = *last_time {
+                let elapsed = last.elapsed();
+                if elapsed < delay {
+                    Some(delay - elapsed)
+                } else {
+                    *last_time = Some(Instant::now());
+                    None
+                }
+            } else {
+                *last_time = Some(Instant::now());
+                None
+            }
+        };
+
+        if let Some(wait_duration) = should_wait {
+            sleep(wait_duration).await;
+            *self.last_request_time.write().unwrap() = Some(Instant::now());
+        }
     }
 
     fn generate_random_user_agent() -> String {
@@ -147,6 +250,8 @@ impl HtmlFetcher {
         url: &str,
         options: FetchOptions<'_>,
     ) -> Result<String> {
+        self.apply_request_delay().await;
+
         let user_agent = self.resolve_user_agent(options.custom_user_agent);
         let headers = self.build_headers(&user_agent, options.cookies)?;
 
@@ -227,5 +332,76 @@ mod tests {
         fetcher.set_fixed_mode();
         assert!(matches!(fetcher.get_mode(), UserAgentMode::Fixed(_)));
         assert!(fetcher.get_current_user_agent().is_some());
+    }
+
+    #[test]
+    fn test_delay_config() {
+        let fetcher = HtmlFetcher::new().unwrap();
+        
+        let default_config = fetcher.get_delay_config();
+        assert!(default_config.enabled);
+        assert_eq!(default_config.min_delay_ms, 1000);
+        assert_eq!(default_config.max_delay_ms, 3000);
+        
+        let custom_config = RequestDelayConfig::new(500, 1500);
+        fetcher.set_delay_config(custom_config);
+        let retrieved_config = fetcher.get_delay_config();
+        assert_eq!(retrieved_config.min_delay_ms, 500);
+        assert_eq!(retrieved_config.max_delay_ms, 1500);
+        assert!(retrieved_config.enabled);
+        
+        fetcher.disable_delay();
+        assert!(!fetcher.get_delay_config().enabled);
+        
+        fetcher.enable_delay();
+        assert!(fetcher.get_delay_config().enabled);
+    }
+
+    #[test]
+    fn test_delay_config_disabled() {
+        let config = RequestDelayConfig::disabled();
+        assert!(!config.enabled);
+        assert_eq!(config.get_random_delay(), Duration::from_millis(0));
+    }
+
+    #[test]
+    fn test_delay_config_random_range() {
+        let config = RequestDelayConfig::new(100, 500);
+        for _ in 0..10 {
+            let delay = config.get_random_delay();
+            assert!(delay >= Duration::from_millis(100));
+            assert!(delay <= Duration::from_millis(500));
+        }
+    }
+
+    #[test]
+    fn test_delay_config_fixed_delay() {
+        let config = RequestDelayConfig::new(1000, 1000);
+        let delay = config.get_random_delay();
+        assert_eq!(delay, Duration::from_millis(1000));
+    }
+
+    #[tokio::test]
+    async fn test_fetch_with_delay() {
+        let fetcher = HtmlFetcher::new().unwrap();
+        fetcher.set_delay_config(RequestDelayConfig::new(100, 200));
+        
+        let start = Instant::now();
+        
+        // First request should not have delay
+        match fetcher.fetch("https://httpbin.org/status/200").await {
+            Ok(_) | Err(_) => {}
+        }
+        
+        // Second request should have delay
+        match fetcher.fetch("https://httpbin.org/status/200").await {
+            Ok(_) | Err(_) => {}
+        }
+        
+        let elapsed = start.elapsed();
+        
+        // The second request should have been delayed
+        // We check if at least 100ms passed (minimum delay)
+        assert!(elapsed >= Duration::from_millis(100), "Expected delay was not applied");
     }
 }
