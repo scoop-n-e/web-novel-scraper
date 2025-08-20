@@ -37,6 +37,17 @@ impl NarouNovelApi {
         if let Some(ncode) = params.ncode {
             query.insert("ncode".to_string(), ncode);
         }
+        
+        // 検索範囲指定（word/notwordの対象を指定）
+        if let Some(ex) = params.ex {
+            query.insert("ex".to_string(), if ex { "1" } else { "0" }.to_string());
+        }
+        if let Some(keyword) = params.keyword {
+            query.insert("keyword".to_string(), if keyword { "1" } else { "0" }.to_string());
+        }
+        if let Some(wname) = params.wname {
+            query.insert("wname".to_string(), if wname { "1" } else { "0" }.to_string());
+        }
         if let Some(userid) = params.userid {
             query.insert("userid".to_string(), userid.to_string());
         }
@@ -131,6 +142,14 @@ impl NarouNovelApi {
         if let Some(lastup) = params.lastup {
             query.insert("lastup".to_string(), lastup);
         }
+        if let Some(lastupdate) = params.lastupdate {
+            query.insert("lastupdate".to_string(), lastupdate);
+        }
+        
+        // 文体フィルタ
+        if let Some(buntai) = params.buntai {
+            query.insert("buntai".to_string(), buntai);
+        }
         
         // タイプフィルタ
         if let Some(novel_type) = params.novel_type {
@@ -208,6 +227,12 @@ pub struct NovelSearchParams {
     pub title: Option<String>,  // タイトル検索
     pub writer: Option<String>,  // 作者名検索
     pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
+    
+    // 検索範囲指定（word/notwordの対象を指定）
+    pub ex: Option<bool>,  // あらすじを検索対象に
+    pub keyword: Option<bool>,  // キーワードを検索対象に
+    pub wname: Option<bool>,  // 作者名を検索対象に
+    
     pub userid: Option<u32>,  // ユーザーID指定
     pub genre: Option<u32>,  // ジャンル指定
     pub biggenre: Option<u32>,  // 大ジャンル指定
@@ -247,7 +272,11 @@ pub struct NovelSearchParams {
     pub maxtime: Option<u32>,  // 最大読了時間（分）
     
     // 最終更新日時フィルタ
-    pub lastup: Option<String>,  // 最終更新日時（YYYYMMDDhhmmss形式）
+    pub lastup: Option<String>,  // 最終掲載日（thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ）
+    pub lastupdate: Option<String>,  // 最終更新日（thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ）
+    
+    // 文体フィルタ
+    pub buntai: Option<String>,  // 文体指定（1,2,4,6）
     
     // タイプフィルタ
     pub novel_type: Option<String>,  // "t": 短編, "r": 連載中, "er": 完結済連載
