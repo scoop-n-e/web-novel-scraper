@@ -31,9 +31,6 @@ impl NocturneNovelApi {
         if let Some(ncode) = params.ncode {
             query.insert("ncode".to_string(), ncode);
         }
-        if let Some(userid) = params.userid {
-            query.insert("userid".to_string(), userid.to_string());
-        }
         if let Some(xid) = params.xid {
             query.insert("xid".to_string(), xid);
         }
@@ -193,17 +190,6 @@ impl NocturneNovelApi {
         Ok(results.into_iter().next())
     }
 
-    /// ユーザーIDでR18小説一覧を取得
-    pub async fn get_by_userid(&self, userid: u32, limit: Option<u32>) -> Result<Vec<NocturneNovel>> {
-        let params = NocturneSearchParams {
-            userid: Some(userid),
-            limit,
-            order: Some(NocturneOrder::New),
-            ..Default::default()
-        };
-        
-        self.search(params).await
-    }
 
     /// ジャンル別にR18小説を検索
     pub async fn search_by_genre(&self, genre: NocturneGenre, limit: Option<u32>) -> Result<Vec<NocturneNovel>> {
@@ -258,7 +244,6 @@ pub struct NocturneSearchParams {
     pub word: Option<String>,  // 検索単語（スペース区切りでAND検索）
     pub notword: Option<String>,  // 除外単語（スペース区切り）
     pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
-    pub userid: Option<u32>,  // ユーザーID指定
     pub xid: Option<String>,  // XID指定（-区切りで複数指定可）
     
     // 検索範囲指定（1で対象にする）

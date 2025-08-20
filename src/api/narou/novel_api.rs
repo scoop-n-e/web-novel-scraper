@@ -57,6 +57,9 @@ impl NarouNovelApi {
         if let Some(istenni) = params.istenni {
             query.insert("istenni".to_string(), if istenni { "1" } else { "0" }.to_string());
         }
+        if let Some(istt) = params.istt {
+            query.insert("istt".to_string(), if istt { "1" } else { "0" }.to_string());
+        }
         if let Some(isstop) = params.isstop {
             query.insert("stop".to_string(), if isstop { "1" } else { "0" }.to_string());
         }
@@ -71,6 +74,20 @@ impl NarouNovelApi {
         }
         if let Some(isr15) = params.isr15 {
             query.insert("isr15".to_string(), if isr15 { "1" } else { "0" }.to_string());
+        }
+        if let Some(ispickup) = params.ispickup {
+            query.insert("ispickup".to_string(), if ispickup { "1" } else { "0" }.to_string());
+        }
+        
+        // 除外フィルタ
+        if let Some(nottensei) = params.nottensei {
+            query.insert("nottensei".to_string(), if nottensei { "1" } else { "0" }.to_string());
+        }
+        if let Some(nottenni) = params.nottenni {
+            query.insert("nottenni".to_string(), if nottenni { "1" } else { "0" }.to_string());
+        }
+        if let Some(notr15) = params.notr15 {
+            query.insert("notr15".to_string(), if notr15 { "1" } else { "0" }.to_string());
         }
         
         // 文字数フィルタ
@@ -122,6 +139,9 @@ impl NarouNovelApi {
         }
         if let Some(of) = params.of {
             query.insert("of".to_string(), of);
+        }
+        if let Some(opt) = params.opt {
+            query.insert("opt".to_string(), opt);
         }
         
         // gzip圧縮対応
@@ -186,11 +206,18 @@ pub struct NovelSearchParams {
     // 詳細フィルタ
     pub istensei: Option<bool>,  // 転生要素
     pub istenni: Option<bool>,  // 転移要素
+    pub istt: Option<bool>,  // 転生または転移要素
     pub isstop: Option<bool>,  // 長期連載停止中
     pub isbl: Option<bool>,  // ボーイズラブ
     pub isgl: Option<bool>,  // ガールズラブ
     pub iszankoku: Option<bool>,  // 残酷な描写あり
     pub isr15: Option<bool>,  // R15作品
+    pub ispickup: Option<bool>,  // ピックアップ作品
+    
+    // 除外フィルタ
+    pub nottensei: Option<bool>,  // 転生要素除外
+    pub nottenni: Option<bool>,  // 転移要素除外
+    pub notr15: Option<bool>,  // R15作品除外
     
     // 文字数フィルタ（length指定時はminlen/maxlenは無視）
     pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
@@ -217,6 +244,7 @@ pub struct NovelSearchParams {
     pub start: Option<u32>,  // 表示開始位置（1-2000）
     pub order: Option<NarouOrder>,  // ソート順
     pub of: Option<String>,  // 出力項目指定
+    pub opt: Option<String>,  // オプション項目（例: "weekly"）
     
     // gzip圧縮
     pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
