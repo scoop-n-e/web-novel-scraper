@@ -124,7 +124,12 @@ impl NarouNovelApi {
             query.insert("of".to_string(), of);
         }
         
-        self.client.request(&self.base_url, &query).await
+        // gzip圧縮対応
+        if let Some(gzip_level) = params.gzip {
+            self.client.request_with_gzip(&self.base_url, &mut query, Some(gzip_level)).await
+        } else {
+            self.client.request(&self.base_url, &query).await
+        }
     }
 
     /// ncodeで小説情報を取得
@@ -212,4 +217,7 @@ pub struct NovelSearchParams {
     pub start: Option<u32>,  // 表示開始位置（1-2000）
     pub order: Option<NarouOrder>,  // ソート順
     pub of: Option<String>,  // 出力項目指定
+    
+    // gzip圧縮
+    pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
 }
