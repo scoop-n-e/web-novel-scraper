@@ -39,17 +39,17 @@ impl NarouUserApi {
         }
         
         // フィルタ条件
-        if let Some(novel_min) = params.novel_min {
-            query.insert("minnovel".to_string(), novel_min.to_string());
+        if let Some(minnovel) = params.minnovel {
+            query.insert("minnovel".to_string(), minnovel.to_string());
         }
-        if let Some(novel_max) = params.novel_max {
-            query.insert("maxnovel".to_string(), novel_max.to_string());
+        if let Some(maxnovel) = params.maxnovel {
+            query.insert("maxnovel".to_string(), maxnovel.to_string());
         }
-        if let Some(review_min) = params.review_min {
-            query.insert("minreview".to_string(), review_min.to_string());
+        if let Some(minreview) = params.minreview {
+            query.insert("minreview".to_string(), minreview.to_string());
         }
-        if let Some(review_max) = params.review_max {
-            query.insert("maxreview".to_string(), review_max.to_string());
+        if let Some(maxreview) = params.maxreview {
+            query.insert("maxreview".to_string(), maxreview.to_string());
         }
         
         // 出力制御
@@ -117,10 +117,10 @@ pub struct UserSearchParams {
     pub name1st: Option<String>,  // 頭文字指定（ひらがな・カタカナ・英数字・その他）
     
     // フィルタ条件
-    pub novel_min: Option<u32>,  // 作品投稿数最小
-    pub novel_max: Option<u32>,  // 作品投稿数最大
-    pub review_min: Option<u32>,  // レビュー投稿数最小
-    pub review_max: Option<u32>,  // レビュー投稿数最大
+    pub minnovel: Option<u32>,  // 作品投稿数最小
+    pub maxnovel: Option<u32>,  // 作品投稿数最大
+    pub minreview: Option<u32>,  // レビュー投稿数最小
+    pub maxreview: Option<u32>,  // レビュー投稿数最大
     
     // 出力制御
     pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）

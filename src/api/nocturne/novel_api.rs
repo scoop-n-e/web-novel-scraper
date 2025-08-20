@@ -258,7 +258,7 @@ pub struct NocturneSearchParams {
     pub xid: Option<String>,  // XID指定（-区切りで複数指定可）
     
     // 検索範囲指定（1で対象にする）
-    pub title: Option<bool>,  // タイトルを検索対象に
+    pub title: Option<bool>,  // 1でタイトルをword/notwordの検索対象に含める
     pub ex: Option<bool>,  // あらすじを検索対象に
     pub keyword: Option<bool>,  // キーワードを検索対象に
     pub wname: Option<bool>,  // 作者名を検索対象に
