@@ -6,7 +6,6 @@ pub struct NocturneNovel {
     // 基本情報（なろうと共通のフィールド）
     pub title: String,
     pub ncode: String,
-    pub userid: u32,
     pub writer: String,
     pub story: Option<String>,
     pub keyword: Option<String>,
