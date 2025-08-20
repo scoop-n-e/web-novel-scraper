@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>X活動報告Atomの仕様 | なろうデベロッパー</title>
+<meta name="description" content="なろうデベロッパー - 小説サイトが簡単に作れます:小説家になろうグループ" />
+<meta name="keywords" content="ウェブAPI 小説サイト 開発者支援" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/base_narou-dev.css?sfzd9j">
+
+<script type="text/javascript"><!--
+var domain = 'syosetu.com';
+//--></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://static.syosetu.com/view/js/lib/jquery.hina.js?rq7apb"></script>
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/p_xblogatom.css?sf9es2"/>
+
+
+
+
+
+
+</head>
+<body>
+
+<header class="l-header">
+<div class="p-header">
+<h1 class="p-header__logo">
+<a href="/"><img src="https://static.syosetu.com/sub/devview/images/naroudev-logo.png?rrhuul" alt="なろうデベロッパー"></a>
+</h1><!-- /.p-header-logo -->
+<div class="p-header__narou">
+<a href="https://syosetu.com/" target="_blank"><img src="https://static.syosetu.com/sub/devview/images/logo_narou.png?rrhuul" alt="小説家になろう"></a>
+</div><!-- /.p-header-narou -->
+</div><!-- /.p-header -->
+</header><!-- /.l-header -->
+<div class="l-container">
+<aside class="l-sidebar">
+<div class="p-globalnav">
+<ul class="p-globalnav__list">
+<li><a href="/">トップページ</a></li>
+<li><a href="/man/man/">技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">なろうの仕様に関して</div>
+<ul>
+<li><a href="/man/url/">URLの法則</a></li>
+<li><a href="/man/wwwc/">WWWCメタタグチェックツール対応に関して</a></li>
+</ul>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/blogatom/">活動報告Atom</a></li>
+<li><a href="/man/atom/">小説Atom</a></li>
+</ul>
+<div class="p-globalnav__head">ウィジェット利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/nish/">なろう小説インラインサーチウィジェット</a></li>
+</ul>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/api/">なろう小説API</a></li>
+<li><a href="/man/rankapi/">なろう小説ランキングAPI</a></li>
+<li><a href="/man/rankinapi/">なろう殿堂入りAPI</a></li>
+<li><a href="/man/userapi/">なろうユーザ検索API</a></li>
+</ul>
+</li>
+<li><a href="/xman/man/">R18技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/blogatom/">X活動報告Atom</a></li>
+<li><a href="/xman/atom/">R18小説Atom</a></li>
+</ul>
+</li>
+<li>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/api/">なろうR18小説API</a></li>
+</ul>
+</li>
+<li><a href="https://hinaproject.co.jp/hina_guideline.html" target="_blank">商標ガイドライン</a></li>
+</ul><!-- /.p-globalnav -->
+</div><!-- /.p-globalnav -->
+</aside><!-- /.l-globalnav -->
+<div class="l-content">
+
+<main class="l-main">
+<h2 class="c-title c-title--lg">X活動報告Atom</h2><!-- /.c-title .c-title--lg -->
+<div class="c-document">
+<article class="c-document__article">
+
+<section class="c-document__section">
+<p class="c-document__text">Atom(アトム)フィードでX活動報告の更新情報を提供しています。Atomを使うことで新着X活動報告をすばやく把握することができます。</p>
+<div class="c-attention">このページで取り扱う情報には、18歳未満が取り扱うのにふさわしくない情報が含まれています。</div><!-- /.c-attention -->
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="atom-url">AtomフィードのURL</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/xblogatom.Atom</span></p>
+<p class="c-document__text">小説家になろう全体のX活動報告のAtomフィードです。</p>
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">ユーザ別Atom</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/writerblog/○○○○.Atom</span></p>
+<p class="c-document__text">Xユーザ単位の活動報告です。○○○○のところにXIDが入ります。<br>なお、Xユーザ名は敬称略としています。</p>
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="atom-innfo-detail">Atomフィードで提供される情報</h3><!-- /.c-title .c-title--md -->
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">&lt;summary&gt;</span></div>
+<div>X活動報告の出だし100文字が入っています。</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">&lt;title&gt;</span></div>
+<div>X活動報告のタイトルが記載されます。</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">&lt;comment&gt;</span></div>
+<div>X活動報告を書いた人のXIDとXユーザ名が <span class="c-inlinecode">XID/Xユーザ名</span> のように/(スラッシュ)区切りで記載しています。</div>
+</li>
+</ul>
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="how-to-use">Atomフィードの利用方法</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">AtomフィードはAtom対応ウェブブラウザで読み込むことにより誰でも簡単に利用できます。<br>また、PHPやPerl、Javaなどのプログラミング言語からもライブラリを使うことで読み込みできます。<br>Atomフィードで提供される情報の利用はご自由にどうぞ。</p>
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="delay">遅延と最大件数</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">Atomフィードは平均10分ごとの更新です。Atomフィード作成時に瞬時に最寄の活動報告データーベースに新着活動報告情報を問い合わせAtomフィードが作成されます。<br>
+しかし、マスターデータベースとスレーブデータベースに何らかのネットワーク障害が発生した場合に限り、数時間情報が遅れていることがあります。予めご了承ください。<br><br>Atomフィードには新着100件が掲載されています。</p>
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="limit">利用制限</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">基本的に利用制限はありませんが、小説家になろうグループのほかのページと同様で、一人の利用者から連続した接続を確認した場合、利用者のIPアドレス単位で一時的にアクセス規制することがあります。</p>
+</section><!-- /.c-document__section -->
+</article><!-- /.c-document__article -->
+
+<nav class="c-document__navigation">
+<div class="c-subbar">
+<dl class="c-subnav">
+<dt>目次</dt>
+<dd><a href="#atom-url">AtomフィードのURL</a></dd>
+<dd><a href="#atom-innfo-detail">Atomフィードで提供される情報</a></dd>
+<dd><a href="#how-to-use">Atomフィードの利用方法</a></dd>
+<dd><a href="#delay">遅延と最大件数</a></dd>
+<dd><a href="#limit">利用制限</a></dd>
+</dl><!-- /.c-subnav -->
+
+
+</div><!-- /.c-sub-bar -->
+</nav><!-- /.c-document__navigation -->
+</div><!-- /.c-document --></main><!-- /.l-main -->
+
+<footer class="l-footer">
+<div class="p-footer">
+<div class="p-footer__backtotop"><a href="#">このページの上に戻る</a></div>
+<div class="p-footer__author">企画&運営<a href="https://hinaproject.co.jp/" target="_blank">HinaProject Inc.</a></div>
+</div><!-- /.p-footer -->
+</footer><!-- /.l-footer --></div><!-- /.l-content -->
+</div><!-- /.l-page -->
+
+</body>
+</html>

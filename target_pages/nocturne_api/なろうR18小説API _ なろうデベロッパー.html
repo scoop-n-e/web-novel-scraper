@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>なろうR18小説API | なろうデベロッパー</title>
+<meta name="description" content="なろうデベロッパー - 小説サイトが簡単に作れます:小説家になろうグループ" />
+<meta name="keywords" content="ウェブAPI 小説サイト 開発者支援" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/base_narou-dev.css?sfzd9j">
+
+<script type="text/javascript"><!--
+var domain = 'syosetu.com';
+//--></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://static.syosetu.com/view/js/lib/jquery.hina.js?rq7apb"></script>
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/p_xapi.css?sf9es2"/>
+
+
+
+
+
+
+</head>
+<body>
+
+<header class="l-header">
+<div class="p-header">
+<h1 class="p-header__logo">
+<a href="/"><img src="https://static.syosetu.com/sub/devview/images/naroudev-logo.png?rrhuul" alt="なろうデベロッパー"></a>
+</h1><!-- /.p-header-logo -->
+<div class="p-header__narou">
+<a href="https://syosetu.com/" target="_blank"><img src="https://static.syosetu.com/sub/devview/images/logo_narou.png?rrhuul" alt="小説家になろう"></a>
+</div><!-- /.p-header-narou -->
+</div><!-- /.p-header -->
+</header><!-- /.l-header -->
+<div class="l-container">
+<aside class="l-sidebar">
+<div class="p-globalnav">
+<ul class="p-globalnav__list">
+<li><a href="/">トップページ</a></li>
+<li><a href="/man/man/">技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">なろうの仕様に関して</div>
+<ul>
+<li><a href="/man/url/">URLの法則</a></li>
+<li><a href="/man/wwwc/">WWWCメタタグチェックツール対応に関して</a></li>
+</ul>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/blogatom/">活動報告Atom</a></li>
+<li><a href="/man/atom/">小説Atom</a></li>
+</ul>
+<div class="p-globalnav__head">ウィジェット利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/nish/">なろう小説インラインサーチウィジェット</a></li>
+</ul>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/api/">なろう小説API</a></li>
+<li><a href="/man/rankapi/">なろう小説ランキングAPI</a></li>
+<li><a href="/man/rankinapi/">なろう殿堂入りAPI</a></li>
+<li><a href="/man/userapi/">なろうユーザ検索API</a></li>
+</ul>
+</li>
+<li><a href="/xman/man/">R18技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/blogatom/">X活動報告Atom</a></li>
+<li><a href="/xman/atom/">R18小説Atom</a></li>
+</ul>
+</li>
+<li>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/api/">なろうR18小説API</a></li>
+</ul>
+</li>
+<li><a href="https://hinaproject.co.jp/hina_guideline.html" target="_blank">商標ガイドライン</a></li>
+</ul><!-- /.p-globalnav -->
+</div><!-- /.p-globalnav -->
+</aside><!-- /.l-globalnav -->
+<div class="l-content">
+
+<main class="l-main">
+<h2 class="c-title c-title--lg">なろうR18小説API</h2><!-- /.c-title .c-title--lg -->
+
+
+<div class="c-document">
+<article class="c-document__article">
+
+<section class="c-document__section">
+<p class="c-document__text">なろうR18小説APIではノクターンノベルズ、ムーンライトノベルズおよびミッドナイトノベルズに掲載されている18歳未満閲覧禁止のR18作品情報を取得できます。</p>
+<div class="c-attention">このページで取り扱う情報には、18歳未満が取り扱うのにふさわしくない情報が含まれています。<br>本APIで取得した情報を18歳未満に閲覧させてはいけません。</div><!-- /.c-attention -->
+<p class="c-document__text">なろうR18小説APIはHTTPでのリクエストに対してJSON形式、JSONP形式、YAML形式またはPHPの<span class="c-inlinecode">serialize</span>で応答します。<br>実際に作品のデータが修正されてからなろうAPIに反映されるまで平均5分程度(最大2時間)の誤差があります。</p>
+<div class="c-attention">APIを使うためにはJavaScriptあるいはPerl/PHP/Ruby/Java/C言語などでプログラミングが必要です。</div><!-- /.c-attention -->
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="ouput-style">出力形式</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">JSON形式、JSONP形式またはYAML形式、PHPの<span class="c-inlinecode">serialize</span><br>標準はYAML形式となっていますが、<span class="c-inlinecode">out</span>パラメータで変更できます。<br>文字コードはUTF-8です。</p>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="api-url">APIのURL</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/</span></p>
+<p class="c-document__text">GETで送信。POSTでは受信できません。<br>日本語などマルチバイト文字送信時は文字コードをUTF-8にし、URLエンコードしてください。</p>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="get-parameter">出力GETパラメータ</h3><!-- /.c-title .c-title--md -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+
+<tr>
+<td>gzip</td>
+<td>int(1～5)</td>
+<td>
+<p class="c-document__text">gzip圧縮してgzipファイルとして返します。<br>gzip圧縮レベルを<span class="c-inlinecode">1～5</span>で指定できます。<br>転送量上限を減らすためにも推奨</p>
+</td>
+</tr>
+
+<tr>
+<td>out</td>
+<td>string</td>
+<td>
+<p class="c-document__text">出力形式をyamlまたはjsonまたはphpを指定。<br>未指定時はYAMLになる。<a href="#out-detail">outパラメータの詳細</a></p>
+</td>
+</tr>
+
+<tr>
+<td>of</td>
+<td>string</td>
+<td>
+<p class="c-document__text">出力する項目を個別に指定できます。未指定時は全項目出力されます。<br>転送量軽減のため、このパラメータの使用が推奨されます。<br>複数項目を出力する場合は-で区切ってください。詳しくは<a href="#output">出力</a>の項目をご覧ください。</p>
+</td>
+</tr>
+
+<tr>
+<td>lim</td>
+<td>int(1～500)</td>
+<td>
+<p class="c-document__text">最大出力数を指定できます。最低<span class="c-inlinecode">1</span>、最高<span class="c-inlinecode">500</span>です。<br>半角数字で指定してください。<br>指定しない場合は20件になります。</p>
+</td>
+</tr>
+
+<tr>
+<td>st</td>
+<td>int(1～2000)</td>
+<td>
+<p class="c-document__text">表示開始位置の指定です。半角数字で指定してください。<br>たとえば全部で10作品あるとして、3作品目以降の作品情報を取得したい場合は<span class="c-inlinecode">3</span>と指定してください。</p>
+</td>
+</tr>
+
+<tr>
+<td>order</td>
+<td>string</td>
+<td>
+<p class="c-document__text">出力順序を指定できます。<br>指定しない場合は新着更新順となります。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">new</span></div>
+<div>新着更新順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">favnovelcnt</span></div>
+<div>R18ブックマーク数の多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">reviewcnt</span></div>
+<div>レビュー数の多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">hyoka</span></div>
+<div>総合ポイントの高い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">hyokacnt</span></div>
+<div>評価者数の多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">lengthdesc</span></div>
+<div>作品本文の文字数が多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">dailypoint</span></div>
+<div>日間ポイントの高い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">weeklypoint</span></div>
+<div>週間ポイントの高い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">monthlypoint</span></div>
+<div>月間ポイントの高い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">quarterpoint</span></div>
+<div>四半期ポイントの高い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">yearlypoint</span></div>
+<div>年間ポイントの高い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">weekly</span></div>
+<div>週間ユニークユーザの多い順<br>毎週水曜日早朝リセット<br>(前週の日曜日から土曜日分)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">lengthasc</span></div>
+<div>作品本文の文字数が少ない順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">old</span></div>
+<div>更新が古い順</div>
+</li>
+</ul><!-- /.c-list-explanation -->
+</td>
+</tr>
+</table><!-- /.c-table-explanation -->
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="out-detail">outパラメータの詳細</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">出力形式を指定できます。<br>jsonまたはyamlまたはphpで指定してください。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">yaml</span></div>
+<div>YAML形式(デフォルト)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">json</span></div>
+<div>JSON形式</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">php</span></div>
+<div>PHPの<span class="c-inlinecode">serialize()</span></div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">atom</span></div>
+<div>Atomフィード</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">jsonp</span></div>
+<div>JSONP形式</div>
+</li>
+</ul><!-- /.c-list-explanation -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">JSONPの使い方</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">JSONPを利用することでJavaScriptから直接、APIを利用できるようになります。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">callback</span></div>
+<div>コールバック関数名。コールバック関数名には半角英数字など<span class="c-inlinecode">/^$?[a-zA-Z0-9\[\]\.\_]+$/</span> (perl) の正規表現に一致する関数名を指定してください。</div>
+</li>
+</ul>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?out=jsonp&amp;callback=call</span></p>
+<p class="c-document__text">JSONP形式でコールバック関数名を<span class="c-inlinecode">call</span>にしたい場合のURLです。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">YAML形式の出力に関する動作について</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">出力形式にYAMLを指定した場合、パラメータを指定する事で利用するライブラリを変更できます。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>libtype</td>
+<td>int</td>
+<td>
+<p class="c-document__text">利用するライブラリを指定できます。<br>未指定もしくは<span class="c-inlinecode">1</span>以下の値を指定した場合、従来通りのライブラリを利用します。<br><span class="c-inlinecode">2</span>以上の値を指定すると、新ライブラリを利用します。<br>新ライブラリでは以下の点が従来のライブラリと異なります。</p>
+<ul class="c-list">
+<li>文字列と数値の型指定が厳格化します。</li>
+<li>マルチバイト文字や一部の制御文字がエスケープ処理されます。</li>
+</ul><!-- /.c-list -->
+</td>
+</tr>
+</table>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?libtype=1</span></p>
+<p class="c-document__text">従来通りのライブラリで出力を行ないます。<br>作品名や作者名等、文字列が格納されるエピソードが数値で構成されている場合でも、数値はダブルクォートで囲まれません。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?libtype=2</span></p>
+<p class="c-document__text">新ライブラリで出力を行ないます。<br>作品名や作者名等、文字列が格納されるエピソードが数値で構成されている場合、数値がダブルクォートで囲まれます。</p>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">Atomフィード形式の出力に関する動作について</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">Atomフィードの出力内容をパラメータを指定することで変更できます。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>updatetype</td>
+<td>int</td>
+<td>
+<p class="c-document__text">日付として出力する項目を指定できます。<br>
+<span class="c-inlinecode">2</span>の値を指定すると、最終掲載日<span class="c-inlinecode">general_lastup</span>を日付として出力します。<br>
+未指定の場合、作品の更新日時<span class="c-inlinecode">novelupdated_at</span>を日付として出力します。</p>
+</td>
+</tr>
+</table><!-- /.c-table-explanation -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?out=atom</span></p>
+<p class="c-document__text">作品の更新日時<span class="c-inlinecode">novelupdated_at</span>を日付として出力します。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?out=atom&amp;updatetype=2</span></p>
+<p class="c-document__text">最終掲載日<span class="c-inlinecode">general_lastup</span>を日付として出力します。</p>
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="extraction-condition">条件抽出GETパラメータ</h3><!-- /.c-title .c-title--md -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">検索単語指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>word</td>
+<td>string</td>
+<td>
+<p class="c-document__text">単語を指定できます。文字コードはUTF-8でURLエンコードしてください。<br>半角または全角スペースで区切るとAND抽出になります。部分一致でHITします。</p>
+</td>
+</tr>
+<tr>
+<td>notword</td>
+<td>string</td>
+<td>
+<p class="c-document__text">含みたくない単語を指定できます。文字コードはUTF-8でURLエンコードしてください。<br>スペースで区切ることにより含ませない単語を増やせます。部分一致で除外されます。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">抽出対象の範囲</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>title</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>の場合はタイトルを<span class="c-inlinecode">word</span>と<span class="c-inlinecode">notword</span>の抽出対象にします。</p>
+</td>
+</tr>
+<tr>
+<td>ex</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>の場合はあらすじを<span class="c-inlinecode">word</span>と<span class="c-inlinecode">notword</span>の抽出対象にします。</p>
+</td>
+</tr>
+<tr>
+<td>keyword</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>の場合はキーワードを<span class="c-inlinecode">word</span>と<span class="c-inlinecode">notword</span>の抽出対象にします。</p>
+</td>
+</tr>
+<tr>
+<td>wname</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>の場合は作者名を<span class="c-inlinecode">word</span>と<span class="c-inlinecode">notword</span>の抽出対象にします。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text">上記4項目すべて指定しない場合は全項目抽出対象と扱います。<br><span class="c-inlinecode">word</span>がNコードと判断される文字列の場合、抽出対象はすべて無視され、Nコードから作品を探します。</p>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">掲載サイト指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>nocgenre</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">掲載サイトを指定できます。ハイフン(-)記号で区切れば複数の掲載サイトを一括抽出できます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">1</span></div>
+<div>ノクターンノベルズ(男性向け)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">2</span></div>
+<div>ムーンライトノベルズ(女性向け)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">3</span></div>
+<div>ムーンライトノベルズ(BL)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">4</span></div>
+<div>ミッドナイトノベルズ(大人向け)</div>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?nocgenre=1</span></p>
+<p class="c-document__text">掲載サイトがノクターンノベルズ(男性向け)となっている作品の作品情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?nocgenre=1-3</span></p>
+<p class="c-document__text">掲載サイトがノクターンノベルズ(男性向け)またはムーンライトノベルズ(BL)となっている作品の作品情報を取得するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">掲載サイト除外指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>notnocgenre</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">掲載サイトを除外検索できます。ハイフン(-)記号で区切れば含ませたくない掲載サイトを増やせます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">1</span></div>
+<div>ノクターンノベルズ(男性向け)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">2</span></div>
+<div>ムーンライトノベルズ(女性向け)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">3</span></div>
+<div>ムーンライトノベルズ(BL)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">4</span></div>
+<div>ミッドナイトノベルズ(大人向け)</div>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?notnocgenre=1</span></p>
+<p class="c-document__text">掲載サイトがノクターンノベルズ(男性向け)となっている作品以外の作品情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?notnocgenre=2-3</span></p>
+<p class="c-document__text">掲載サイトがムーンライトノベルズ(女性向け、BL)となっている作品以外の作品情報を取得するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">XID指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>xid</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">XIDで抽出可能。ハイフン(-)記号で区切ればXIDのOR検索ができます。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">作品に含まれる要素指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>isbl</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「ボーイズラブ」が含まれている作品のみを抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>isgl</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「ガールズラブ」が含まれている作品のみを抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>iszankoku</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「残酷な描写あり」が含まれている作品のみを抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>istensei</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「異世界転生」が含まれている作品のみを抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>istenni</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「異世界転移」が含まれている作品のみを抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>istt</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「異世界転生」または「異世界転移」が含まれている作品のみを抽出します。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">作品に含まれる要素除外指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>notbl</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「ボーイズラブ」が含まれている作品を除外し抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>notgl</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「ガールズラブ」が含まれている作品を除外し抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>notzankoku</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「残酷な描写あり」が含まれている作品を除外し抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>nottensei</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「異世界転生」が含まれている作品を除外し抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>nottenni</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、作品に含まれる要素に「異世界転移」が含まれている作品を除外し抽出します。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">文字数指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>minlen</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出する作品の最小文字数を指定できます。<br>文字数とは作品から一部タグ記号(改ページ等)、ルビ、ルビのふりがな部分、みてみんの画像挿入コード、スペース、改行を抜いた値です。</p>
+</td>
+</tr>
+
+<tr>
+<td>maxlen</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出する作品の最大文字数。文字数とは作品から一部タグ記号(改ページ等)、ルビ、ルビのふりがな部分、みてみんの画像挿入コード、スペース、改行を抜いた値です。</p>
+</td>
+</tr>
+
+<tr>
+<td>length</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">抽出する作品の文字数を指定できます。<span class="c-inlinecode">minlen</span>または<span class="c-inlinecode">maxlen</span>と併用はできません。<br>文字数とは作品から一部タグ記号(改ページ等)、ルビ、ルビのふりがな部分、みてみんの画像挿入コード、スペース、改行を抜いた値です。<br>範囲指定する場合は、最小文字数と最大文字数をハイフン(-)記号で区切ってください。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?length=10000</span></p>
+<p class="c-document__text">文字数が1万文字ちょうどの作品の作品情報を取得するURLです。</p>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?length=2000-3000</span></p>
+<p class="c-document__text">文字数が2000文字から3000文字の作品の作品情報を取得するURLです。</p>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?length=10000-</span></p>
+<p class="c-document__text">文字数が10000文字以上の作品の作品情報を取得するURLです。</p>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?length=-15000</span></p>
+<p class="c-document__text">文字数が15000文字以下の作品の作品情報を取得するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">会話率指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>kaiwaritu</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">抽出する作品の<a href="/man/kaiwa/">会話率</a>を%単位で指定できます。<br>範囲指定する場合は、最低数と最大数をハイフン(-)記号で区切ってください。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?kaiwaritu=10-50</span></p>
+<p class="c-document__text">会話率が10%～50%までの作品を抽出します。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?kaiwaritu=0-50</span></p>
+<p class="c-document__text">会話率が0%～50%までの作品つまり50%以下の作品を抽出します。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?kaiwaritu=50-</span></p>
+<p class="c-document__text">会話率が50%以上の作品を抽出します。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?kaiwaritu=30</span></p>
+<p class="c-document__text">会話率が30%ちょうどの作品を抽出します。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">挿絵数指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>sasie</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">抽出する作品の挿絵の数を指定できます。<br>範囲指定する場合は、最小数と最大数を-(ハイフン)記号で区切ってください。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?sasie=1-</span></p>
+<p class="c-document__text">挿絵が1以上存在する作品を抽出します。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?sasie=1-5</span></p>
+<p class="c-document__text">挿絵が1つから5つまでの作品を抽出します。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?sasie=3</span></p>
+<p class="c-document__text">挿絵が3つの作品を抽出します。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">読了時間指定</h4><!-- /.c-title .c-title--sm -->
+<div class="c-attention">読了時間は文字数(<span class="c-inlinecode">minlen</span>、<span class="c-inlinecode">maxlen</span>、<span class="c-inlinecode">length</span>)と併用はできません。</div><!-- /.c-attention -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>mintime</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出する作品の最低読了時間を分単位で指定できます。<br>読了時間は作品文字数÷500を切り上げした数字です。</p>
+</td>
+</tr>
+
+<tr>
+<td>maxtime</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出する作品の最大読了時間を分単位で指定できます。<br>読了時間は作品文字数÷500を切り上げした数字です。</p>
+</td>
+</tr>
+
+<tr>
+<td>time</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">抽出する作品の読了時間を指定できます。<span class="c-inlinecode">mintime</span>または<span class="c-inlinecode">maxtime</span>と併用はできません。<br>読了時間は作品文字数÷500を切り上げした数字です。<br>範囲指定する場合は、最小文字数と最大文字数をハイフン(-)記号で区切ってください。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?time=10</span></p>
+<p class="c-document__text">読了時間が10分ちょうどの作品の作品情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?time=30-100</span></p>
+<p class="c-document__text">読了時間が30分～100分の作品の作品情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?time=10-</span></p>
+<p class="c-document__text">読了時間が10分以上の作品の作品情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?time=-10</span></p>
+<p class="c-document__text">読了時間が10分以内の作品の作品情報を取得するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">Nコード指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>ncode</td>
+<td>string</td>
+<td>
+<p class="c-document__text">Nコードで抽出可能。ハイフン(-)記号で区切ればNコードのOR検索ができます。<br>開示設定が「検索除外中です」となっている作品は抽出できません。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?ncode=n0001a-n1111b-n9999d</span></p>
+<p class="c-document__text"><span class="c-inlinecode">N0001A</span>,<span class="c-inlinecode">N1111B</span>,<span class="c-inlinecode">N9999D</span>を取得するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">作品タイプ指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>
+<p class="c-document__text">作品タイプを指定できます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">t</span></div>
+<div>短編</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">r</span></div>
+<div>連載中</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">er</span></div>
+<div>完結済連載作品</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">re</span></div>
+<div>すべての連載作品(連載中および完結済)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ter</span></div>
+<div>短編と完結済連載作品</div>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">文体指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>buntai</td>
+<td>int<br>string</td>
+<td>
+<p class="c-document__text">文体を指定できます。ハイフン(-)記号で区切ればOR検索できます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">1</span></div>
+<div>字下げされておらず、連続改行が多い作品</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">2</span></div>
+<div>字下げされていないが、改行数は平均な作品</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">4</span></div>
+<div>字下げが適切だが、連続改行が多い作品</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">6</span></div>
+<div>字下げが適切でかつ改行数も平均な作品</div>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<div class="c-attention">本機能は試験提供機能です。マージンを設けてあるため、適切な結果でない場合があります。</div><!-- /.c-attention -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?buntai=4-6</span></p>
+<p class="c-document__text">字下げが適切に行われている作品</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">連載停止中指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>stop</td>
+<td>int</td>
+<td>
+<p class="c-document__text">連載停止中作品に関する指定ができます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">1</span></div>
+<div>長期連載停止中を除きます</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">2</span></div>
+<div>長期連載停止中のみ取得します</div>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+<div class="c-tips">
+<div class="c-tips__title">長期連載停止中の定義</div><!-- /.c-tips__title -->
+<p class="tips__text">未完結の連載中作品で最終掲載日から63日以上経過しているものをさします。<br>
+検索結果に反映されるまで約15分～2時間の遅れがあります。</p><!-- /.tips__text -->
+</div><!-- /.c-tips -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?stop=1</span></p>
+<p class="c-document__text">長期連載停止中を除外するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">最終掲載日指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>lastup</td>
+<td>string</td>
+<td>
+<p class="c-document__text">最終掲載日<span class="c-inlinecode">general_lastup</span>で抽出できます。以下の文字列を指定できます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">thisweek</span></div>
+<div>今週(日曜日の午前0時はじまり)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">lastweek</span></div>
+<div>先週</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">sevenday</span></div>
+<div>過去7日間(7日前の午前0時はじまり)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">thismonth</span></div>
+<div>今月</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">lastmonth</span></div>
+<div>先月</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">タイムスタンプ</span></div>
+<div>開始日と終了日をハイフン(-)記号で区切ることで<a href="http://ja.wikipedia.org/wiki/UNIX%E6%99%82%E9%96%93" target="_blank" title="Wikipediaを参照">UNIXタイムスタンプ</a>で抽出できます。<br>UNIXタイムスタンプとは1970年1月1日からの通算秒数のことです。</div>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?lastup=thisweek</span></p>
+<p class="c-document__text">今週新規投稿または次話投稿された作品の一覧です。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?lastup=1262271600-1264949999</span></p>
+<p class="c-document__text">2010年1月1日0時0分0秒から2010年1月31日23時59分59秒までに新規投稿または次話投稿された作品を抽出できます。UNIXタイムスタンプで指定しています。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">最終更新日指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>lastupdate</td>
+<td>string</td>
+<td>
+<p class="c-document__text">最終更新日<span class="c-inlinecode">novelupdated_at</span>で抽出できます。以下の文字列を指定できます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">thisweek</span></div>
+<div>今週(日曜日の午前0時はじまり)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">lastweek</span></div>
+<div>先週</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">sevenday</span></div>
+<div>過去7日間(7日前の午前0時はじまり)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">thismonth</span></div>
+<div>今月</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">lastmonth</span></div>
+<div>先月</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">タイムスタンプ</span></div>
+<div>開始日と終了日をハイフン(-)記号で区切ることで<a href="http://ja.wikipedia.org/wiki/UNIX%E6%99%82%E9%96%93" target="_blank" title="Wikipediaを参照">UNIXタイムスタンプ</a>で抽出できます。<br>UNIXタイムスタンプとは1970年1月1日からの通算秒数のことです。</div>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?lastupdate=thisweek</span></p>
+<p class="c-document__text">今週中に内容が更新された作品の一覧です。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?lastupdate=1262271600-1264949999</span></p>
+<p class="c-document__text">2010年1月1日0時0分0秒から2010年1月31日23時59分59秒までに内容が更新された作品を抽出できます。UNIXタイムスタンプで指定しています。</p>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">ピックアップ指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>ispickup</td>
+<td>int</td>
+<td>
+<p class="c-document__text"><span class="c-inlinecode">1</span>を指定した場合、最終掲載日<span class="c-inlinecode">general_lastup</span>から60日以内でなおかつ「短編または完結済または10万文字以上の連載中」を抽出します。</p>
+</td>
+</tr>
+</table>
+<div class="c-tips">
+<p class="c-tips__text">ノクターンノベルズ、ムーンライトノベルズおよびミッドナイトノベルズのピックアップは<span class="c-inlinecode">ispickup</span>が<span class="c-inlinecode">1</span>でさらに作品評価が高い順100件です。<br>ノクターンノベルズ、ムーンライトノベルズおよびミッドナイトノベルズのピックアップと同一結果を取得したい場合は<span class="c-inlinecode">ispickup</span>が<span class="c-inlinecode">1</span>であるかを確認し、さらに総合評価で並べ替えその結果を100件取得する必要があります。</p>
+<p class="c-tips__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?ispickup=1&order=hyoka&lim=100</span></p>
+<p class="c-tips__text">ノクターンノベルズ、ムーンライトノベルズおよびミッドナイトノベルズで使っている小説ピックアップの情報を取得するURLです。</p>
+</div><!-- /.c-tips -->
+
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="output">出力</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">APIサーバが出力する文字コードはUTF-8です。デフォルトはYAML形式です。<br>outパラメータでJSON形式などにも変更できます。<br>最初の要素には全作品出力数が入り、以降、一作品ずつ情報が入っています。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col2-1">
+<col class="c-table-explanation__col2-2">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>要素</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>allcount</td>
+<td>
+<p class="c-document__text">全作品出力数です。</p>
+</td>
+</tr>
+
+<tr>
+<td>title</td>
+<td>
+<p class="c-document__text">作品名</p>
+</td>
+</tr>
+
+<tr>
+<td>ncode</td>
+<td>
+<p class="c-document__text">Nコード</p>
+</td>
+</tr>
+
+<tr>
+<td>writer</td>
+<td>
+<p class="c-document__text">作者名</p>
+</td>
+</tr>
+
+<tr>
+<td>story</td>
+<td>
+<p class="c-document__text">作品のあらすじ</p>
+</td>
+</tr>
+<tr>
+<td>nocgenre</td>
+<td>
+<p class="c-document__text">掲載サイト</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">1</span></div>
+<div>ノクターンノベルズ(男性向け)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">2</span></div>
+<div>ムーンライトノベルズ(女性向け)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">3</span></div>
+<div>ムーンライトノベルズ(BL)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">4</span></div>
+<div>ミッドナイトノベルズ(大人向け)</div>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td>gensaku</td>
+<td>
+<p class="c-document__text">現在未使用項目(常に空文字が返ります)</p>
+</td>
+</tr>
+
+<tr>
+<td>keyword</td>
+<td>
+<p class="c-document__text">キーワード</p>
+</td>
+</tr>
+
+<tr>
+<td>general_firstup</td>
+<td>
+<p class="c-document__text">初回掲載日<br><span class="c-inlinecode">YYYY-MM-DD HH:MM:SS</span>の形式</p>
+</td>
+</tr>
+
+<tr>
+<td>general_lastup</td>
+<td>
+<p class="c-document__text">最終掲載日<br><span class="c-inlinecode">YYYY-MM-DD HH:MM:SS</span>の形式</p>
+</td>
+</tr>
+
+<tr>
+<td>novel_type</td>
+<td>
+<p class="c-document__text">連載の場合は<span class="c-inlinecode">1</span>、短編の場合は<span class="c-inlinecode">2</span></p>
+</td>
+</tr>
+
+<tr>
+<td>end</td>
+<td>
+<p class="c-document__text">短編作品と完結済作品は<span class="c-inlinecode">0</span>となっています。連載中は<span class="c-inlinecode">1</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>general_all_no</td>
+<td>
+<p class="c-document__text">全掲載エピソード数です。短編の場合は<span class="c-inlinecode">1</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>length</td>
+<td>
+<p class="c-document__text">作品文字数です。スペースや改行は文字数としてカウントしません。</p>
+</td>
+</tr>
+
+<tr>
+<td>time</td>
+<td>
+<p class="c-document__text">読了時間(分単位)です。読了時間は作品文字数÷500を切り上げした数値です。</p>
+</td>
+</tr>
+
+<tr>
+<td>isstop</td>
+<td>
+<p class="c-document__text">長期連載停止中なら<span class="c-inlinecode">1</span>、それ以外は<span class="c-inlinecode">0</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>isbl</td>
+<td>
+<p class="c-document__text">作品に含まれる要素に「ボーイズラブ」が含まれる場合は<span class="c-inlinecode">1</span>、それ以外は<span class="c-inlinecode">0</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>isgl</td>
+<td>
+<p class="c-document__text">作品に含まれる要素に「ガールズラブ」が含まれる場合は<span class="c-inlinecode">1</span>、それ以外は<span class="c-inlinecode">0</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>iszankoku</td>
+<td>
+<p class="c-document__text">作品に含まれる要素に「残酷な描写あり」が含まれる場合は<span class="c-inlinecode">1</span>、それ以外は<span class="c-inlinecode">0</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>istensei</td>
+<td>
+<p class="c-document__text">作品に含まれる要素に「異世界転生」が含まれる場合は<span class="c-inlinecode">1</span>、それ以外は<span class="c-inlinecode">0</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>istenni</td>
+<td>
+<p class="c-document__text">作品に含まれる要素に「異世界転移」が含まれる場合は<span class="c-inlinecode">1</span>、それ以外は<span class="c-inlinecode">0</span>です。</p>
+</td>
+</tr>
+
+<tr>
+<td>global_point</td>
+<td>
+<p class="c-document__text">総合評価ポイント<br>(R18ブックマーク数×2)+評価ポイント</p>
+</td>
+</tr>
+
+<tr>
+<td>daily_point</td>
+<td>
+<p class="c-document__text">日間ポイント<br>ランキング集計時点から過去24時間以内で新たに登録されたブックマークや評価が対象</p>
+</td>
+</tr>
+
+<tr>
+<td>weekly_point</td>
+<td>
+<p class="c-document__text">週間ポイント<br>ランキング集計時点から過去7日以内で新たに登録されたブックマークや評価が対象</p>
+</td>
+</tr>
+
+<tr>
+<td>monthly_point</td>
+<td>
+<p class="c-document__text">月間ポイント<br>ランキング集計時点から過去30日以内で新たに登録されたブックマークや評価が対象</p>
+</td>
+</tr>
+
+<tr>
+<td>quarter_point</td>
+<td>
+<p class="c-document__text">四半期ポイント<br>ランキング集計時点から過去90日以内で新たに登録されたブックマークや評価が対象</p>
+</td>
+</tr>
+
+<tr>
+<td>yearly_point</td>
+<td>
+<p class="c-document__text">年間ポイント<br>ランキング集計時点から過去365日以内で新たに登録されたブックマークや評価が対象</p>
+</td>
+</tr>
+
+<tr>
+<td>fav_novel_cnt</td>
+<td>
+<p class="c-document__text">R18ブックマーク数</p>
+</td>
+</tr>
+
+<tr>
+<td>impression_cnt</td>
+<td>
+<p class="c-document__text">感想数</p>
+</td>
+</tr>
+
+<tr>
+<td>review_cnt</td>
+<td>
+<p class="c-document__text">レビュー数</p>
+</td>
+</tr>
+
+<tr>
+<td>all_point</td>
+<td>
+<p class="c-document__text">評価ポイント</p>
+</td>
+</tr>
+
+<tr>
+<td>all_hyoka_cnt</td>
+<td>
+<p class="c-document__text">評価者数</p>
+</td>
+</tr>
+
+<tr>
+<td>sasie_cnt</td>
+<td>
+<p class="c-document__text">挿絵の数</p>
+</td>
+</tr>
+
+<tr>
+<td>kaiwaritu</td>
+<td>
+<p class="c-document__text"><a href="/man/kaiwa/">会話率</a></p>
+</td>
+</tr>
+
+<tr>
+<td>novelupdated_at</td>
+<td>
+<p class="c-document__text">作品の更新日時</p>
+</td>
+</tr>
+
+<tr>
+<td>updated_at</td>
+<td>
+<p class="c-document__text">最終更新日時<br>システム用で作品更新時とは関係ありません</p>
+</td>
+</tr>
+</table>
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm" id="output-of-parammeter">ofパラメータ</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">出力する項目を個別に指定できます。未指定時は全項目出力されます。転送量軽減のため、このパラメータの使用が推奨されます。<br>複数項目を出力する場合はハイフン(-)記号で区切ってください。</p>
+
+
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">t</span></div>
+<div>title</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">n</span></div>
+<div>ncode</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">w</span></div>
+<div>writer</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">s</span></div>
+<div>story</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ng</span></div>
+<div>nocgenre</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">k</span></div>
+<div>keyword</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">gf</span></div>
+<div>general_firstup</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">gl</span></div>
+<div>general_lastup</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">nt</span></div>
+<div>noveltype<br>※novel_typeではございません</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">e</span></div>
+<div>end</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ga</span></div>
+<div>general_all_no</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">l</span></div>
+<div>length</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ti</span></div>
+<div>time</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">i</span></div>
+<div>isstop</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ibl</span></div>
+<div>isbl</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">igl</span></div>
+<div>isgl</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">izk</span></div>
+<div>iszankoku</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">its</span></div>
+<div>istensei</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">iti</span></div>
+<div>istenni</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">gp</span></div>
+<div>global_point</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">dp</span></div>
+<div>daily_point</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">wp</span></div>
+<div>weekly_point</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">mp</span></div>
+<div>monthly_point</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">qp</span></div>
+<div>quarter_point</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">yp</span></div>
+<div>yearly_point</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">f</span></div>
+<div>fav_novel_cnt</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">imp</span></div>
+<div>impression_cnt</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">r</span></div>
+<div>review_cnt</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">a</span></div>
+<div>all_point</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ah</span></div>
+<div>all_hyoka_cnt</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">sa</span></div>
+<div>sasie_cnt</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ka</span></div>
+<div>kaiwaritu</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">nu</span></div>
+<div>novelupdated_at</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">ua</span></div>
+<div>updated_at</div>
+</li>
+</ul>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?of=t-w&amp;ncode=n0001a</span></p>
+<p class="c-document__text"><span class="c-inlinecode">N0001A</span>のタイトルと作者名を取得するURLです。<span class="c-inlinecode">t</span>と<span class="c-inlinecode">n</span>を指定しています。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?of=ga&amp;ncode=n0001a</span></p>
+<p class="c-document__text"><span class="c-inlinecode">N0001A</span>の全掲載エピソード数を取得するURLです。</p>
+<div class="c-attention"><span class="c-inlinecode">nt</span>を指定した場合、novel_typeではなく<span class="c-inlinecode">noveltype</span>と_(アンダーバー)無しで出力される仕様となっております。ご注意下さい。</div><!-- /.c-attention -->
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">オプション項目</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text"><span class="c-inlinecode">opt</span>パラメータに以下の文字列を指定するとオプション項目を取得できます。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">weekly</span></div>
+<div>週間ユニークユーザ[項目名:<span class="c-inlinecode">weekly_unique</span>]が追加されます。<br>週間ユニークユーザは前週の日曜日から土曜日分のユニークの合計です。<br>毎週水曜日早朝に更新されます。</div>
+</li>
+</ul>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?opt=weekly</span></p>
+<p class="c-document__text">週間ユニークユーザを含めて出力します。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novel18api/api/?sasie=1-&amp;opt=weekly</span></p>
+<p class="c-document__text">挿絵が1枚以上存在する作品を、週間ユニークユーザを含めて出力します。</p>
+<div class="c-tips">
+<div class="c-tips__title">Atomフィードの特例</div><!-- /.c-tips__title -->
+<p class="c-tips__text"><span class="c-inlinecode">out=atom</span>を選択された場合のみ、出力制限があります。<br>タイトルとURL、あらすじ、最終掲載日、コメントの中に作者名のみが出力されています。その他の項目(評価ポイントやキーワードなど)は出力しません。</p><!-- /.c-tips__text -->
+</div><!-- /.c-tips -->
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="time-parameter">時刻の注意</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">なろうR18小説APIにはさまざまな時刻項目があります。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col2-1">
+<col class="c-table-explanation__col2-2">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>項目</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>general_firstup</td>
+<td>
+<p class="c-document__text">初回掲載日です。最初に作品を掲載した日時となっております。原則として初回掲載日が変わることはありません。</p>
+</td>
+</tr>
+
+<tr>
+<td>general_lastup</td>
+<td>
+<p class="c-document__text">作品最終掲載日です。作品を公開した時点で反映されます。<br>上の<span class="c-inlinecode">general_firstup</span>と違い連載作品の場合、次話投稿時にも反映されます。ただし編集の場合は反映されません。</p>
+</td>
+</tr>
+
+<tr>
+<td>novelupdated_at</td>
+<td>
+<p class="c-document__text">作品の更新時刻<br>最後に作品データが更新された時刻です。</p>
+</td>
+</tr>
+
+<tr>
+<td>updated_at</td>
+<td>
+<p class="c-document__text">データ更新時刻<br>最後にデータが更新された時刻です。なろう小説APIの場合、総合評価ポイントが変わった場合なども反映されます。<br>作品の更新時刻ではありません。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="limit">利用制限</h3><!-- /.c-title .c-title--md -->
+<div class="c-attention">利用制限は現在、休止しています。<br>負荷状況により今後、導入されることがあるためキャッシュの導入など、利用制限を想定したシステム設計をお願いします。ただし、古い情報を誤って掲載しないよう一定期間(長くても２週間)でキャッシュの更新・削除をお願いします。</div>
+<p class="c-document__text">IPアドレスごとに利用制限を行います。<br>
+1日の利用上限は80,000または転送量上限400MByteです。<br>
+利用制限は初回アクセスから24時間が適用範囲です。<br>
+初回のアクセスから24時間後に回数と転送量を記録していたカウンタと初回アクセス時刻をリセットします。<br>
+なお、1日の利用上限を超えた場合、エラーの発生確率が増します。<br>
+混雑状況にもよりますが、リクエスト回数または転送量が利用上限の120%を超えるとほとんど接続できなくなります。<br><br>
+
+備考：利用制限カウンタは厳密ではなく多少のマージンを設けてあります。<br>
+転送量は圧縮することで減らせます。</p>
+<div class="c-tips">
+<div class="c-tips__title">転送量制限の回避方法</div><!-- /.c-tips__title -->
+<ul class="c-list">
+<li><span class="c-inlinecode">gzip=5</span>を指定し、gzipファイルで受信する。<br>デメリットとして受け取り側で解凍する手間は発生するが、かなりの転送量を削減できる。</li>
+<li>YAML形式を使う。一番容量が小さいため。</li>
+<li><a href="#output-of-parammeter">ofパラメータ</a>を使い、必要な項目のみを出力する。</li>
+</ul><!-- /.c-list -->
+</div><!-- /.c-tips -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="delay">遅延について</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">データベースサーバは日本国内の複数拠点に分散されていることがあります。<br>APIから小説データベースに接続した場合、原則としてスレーブサーバにつながります。<br>マスタサーバとスレーブサーバ間は10秒以内にデータを同期しています。</p>
+<p class="c-document__text">しかし、何らかのネットワーク障害が発生した場合、遅延が発生し、サーバによってデータにばらつきが生じることがあります。<br>また、実際に作品のデータが修正されてからなろうAPIに反映されるまで平均5分程度(最大2時間)の誤差があります。</p>
+<p class="c-document__text"><span class="c-inlinecode">stop</span>パラメータ、<span class="c-inlinecode">global_point</span>、<span class="c-inlinecode">fav_novel_cnt</span>、<span class="c-inlinecode">review_cnt</span>、<span class="c-inlinecode">all_point</span>、<span class="c-inlinecode">all_hyoka_cnt</span>項目に関してはキャッシュの都合上、さらに15分から2時間の遅れがあります。</p>
+</section><!-- /.c-document__section -->
+</article><!-- /.c-document__article -->
+
+<nav class="c-document__navigation">
+<div class="c-subbar">
+<dl class="c-subnav">
+<dt>目次</dt>
+<dd><a href="#ouput-style">出力形式</a></dd>
+<dd><a href="#api-url">APIのURL</a></dd>
+<dd><a href="#get-parameter">出力GETパラメータ</a></dd>
+<dd><a href="#out-detail">outパラメータの詳細</a></dd>
+<dd><a href="#extraction-condition">条件抽出GETパラメータ</a></dd>
+<dd><a href="#output">出力</a></dd>
+<dd><a href="#time-parameter">時刻の注意</a></dd>
+<dd><a href="#limit">利用制限</a></dd>
+<dd><a href="#delay">遅延について</a></dd>
+</dl><!-- /.c-subnav -->
+
+
+</div><!-- /.c-sub-bar -->
+</nav><!-- /.c-document__navigation -->
+</div><!-- /.c-document --></main><!-- /.l-main -->
+
+<footer class="l-footer">
+<div class="p-footer">
+<div class="p-footer__backtotop"><a href="#">このページの上に戻る</a></div>
+<div class="p-footer__author">企画&運営<a href="https://hinaproject.co.jp/" target="_blank">HinaProject Inc.</a></div>
+</div><!-- /.p-footer -->
+</footer><!-- /.l-footer --></div><!-- /.l-content -->
+</div><!-- /.l-page -->
+
+</body>
+</html>

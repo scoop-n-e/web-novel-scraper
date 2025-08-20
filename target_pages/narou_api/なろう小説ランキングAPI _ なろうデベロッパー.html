@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>なろう小説ランキングAPI | なろうデベロッパー</title>
+<meta name="description" content="なろうデベロッパー - 小説サイトが簡単に作れます:小説家になろうグループ" />
+<meta name="keywords" content="ウェブAPI 小説サイト 開発者支援" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/base_narou-dev.css?sfzd9j">
+
+<script type="text/javascript"><!--
+var domain = 'syosetu.com';
+//--></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://static.syosetu.com/view/js/lib/jquery.hina.js?rq7apb"></script>
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/p_rankapi.css?sf9es2"/>
+
+
+
+
+
+
+</head>
+<body>
+
+<header class="l-header">
+<div class="p-header">
+<h1 class="p-header__logo">
+<a href="/"><img src="https://static.syosetu.com/sub/devview/images/naroudev-logo.png?rrhuul" alt="なろうデベロッパー"></a>
+</h1><!-- /.p-header-logo -->
+<div class="p-header__narou">
+<a href="https://syosetu.com/" target="_blank"><img src="https://static.syosetu.com/sub/devview/images/logo_narou.png?rrhuul" alt="小説家になろう"></a>
+</div><!-- /.p-header-narou -->
+</div><!-- /.p-header -->
+</header><!-- /.l-header -->
+<div class="l-container">
+<aside class="l-sidebar">
+<div class="p-globalnav">
+<ul class="p-globalnav__list">
+<li><a href="/">トップページ</a></li>
+<li><a href="/man/man/">技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">なろうの仕様に関して</div>
+<ul>
+<li><a href="/man/url/">URLの法則</a></li>
+<li><a href="/man/wwwc/">WWWCメタタグチェックツール対応に関して</a></li>
+</ul>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/blogatom/">活動報告Atom</a></li>
+<li><a href="/man/atom/">小説Atom</a></li>
+</ul>
+<div class="p-globalnav__head">ウィジェット利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/nish/">なろう小説インラインサーチウィジェット</a></li>
+</ul>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/api/">なろう小説API</a></li>
+<li><a href="/man/rankapi/">なろう小説ランキングAPI</a></li>
+<li><a href="/man/rankinapi/">なろう殿堂入りAPI</a></li>
+<li><a href="/man/userapi/">なろうユーザ検索API</a></li>
+</ul>
+</li>
+<li><a href="/xman/man/">R18技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/blogatom/">X活動報告Atom</a></li>
+<li><a href="/xman/atom/">R18小説Atom</a></li>
+</ul>
+</li>
+<li>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/api/">なろうR18小説API</a></li>
+</ul>
+</li>
+<li><a href="https://hinaproject.co.jp/hina_guideline.html" target="_blank">商標ガイドライン</a></li>
+</ul><!-- /.p-globalnav -->
+</div><!-- /.p-globalnav -->
+</aside><!-- /.l-globalnav -->
+<div class="l-content">
+
+<main class="l-main">
+<h2 class="c-title c-title--lg">なろう小説ランキングAPI</h2><!-- /.c-title .c-title--lg -->
+<div class="c-document">
+<article class="c-document__article">
+
+<section class="c-document__section">
+<p class="c-document__text">なろう小説ランキングAPIでは「<a href="https://yomou.syosetu.com/rank/top/">小説を読もう！で公開しているランキング</a>」を取得できます。取得できるランキングは2013年5月1日以降の日間、週間、月間、四半期ランキングです。<br>現在、R18ランキングを取得するAPIは提供しておりません。</p>
+<p class="c-document__text">なろう小説ランキングAPIはHTTPでのリクエストに対してJSON形式、JSONP形式又はYAML形式で応答します。<br>すべてのランキング結果を抽出できるわけではありません。</p>
+<div class="c-attention">APIを使うためにはJavaScriptあるいはPerl/PHP/Ruby/Java/C言語などでプログラミングが必要です。</div><!-- /.c-attention -->
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="ouput-style">出力形式</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">JSON形式、JSONP形式またはYAML形式となっています。<br>標準はYAML形式となっていますが、<span class="c-inlinecode">out</span>パラメータで変更できます。<br>文字コードはUTF-8です。</p>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="api-url">APIのURL</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/</span></p>
+<p class="c-document__text">GETで送信。POSTでは受信できません。<br><span class="c-inlinecode">rtype</span>は必須です。指定しない場合<span class="c-inlinecode">Error: Invalid date.</span>になります。</p>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="get-parameter">GETパラメータ</h3><!-- /.c-title .c-title--md -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>gzip</td>
+<td>int(1～5)</td>
+<td>
+<p class="c-document__text">gzip圧縮してgzipファイルとして返します。<br>gzip圧縮レベルを<span class="c-inlinecode">1～5</span>で指定できます。<br>転送量上限を減らすためにも推奨</p>
+</td>
+</tr>
+
+<tr>
+<td>out</td>
+<td>string</td>
+<td>
+<p class="c-document__text">出力形式をyamlまたはjsonまたはphpを指定。<br>未指定時はYAMLになる。<a href="#out-detail">outパラメータの詳細</a></p>
+</td>
+</tr>
+<tr>
+<td>rtype</td>
+<td>string</td>
+<td>
+<p class="c-document__text">ランキングタイプです。蓄積されているランキングを取得できます。<br>ランキングタイプの形式は<span class="c-inlinecode">日付-種類</span>の形式です。<span class="c-inlinecode">20130501-m</span>のように日付と種類の間に-(ハイフン)をはさみます。<br>日付は<span class="c-inlinecode">20130501</span>のように西暦(4桁)、月(2桁)、日(2桁)で入力します。<br>種類には日間の場合は<span class="c-inlinecode">d</span>、週間の場合は<span class="c-inlinecode">w</span>、月間の場合は<span class="c-inlinecode">m</span>が、四半期の場合は<span class="c-inlinecode">q</span>が入ります。</p>
+<ul class="c-list">
+<li>2013年5月1日以降の日付を指定してください。</li>
+<li>週間を取得する場合、日付は火曜日の日付を指定してください。</li>
+<li>月間、四半期を取得する場合、日付は1日を指定してください。<br>詳しくは<a href="#constraints">制約について</a>をご覧ください。</li>
+</ul><!-- /.c-list -->
+</td>
+</tr>
+</table><!-- /.c-table-explanation -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20130501-m</span></p>
+<p class="c-document__text">2013年5月1日の月間ランキングを取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20130502-d</span></p>
+<p class="c-document__text">2013年5月2日の日間ランキングを取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20140401-q</span></p>
+<p class="c-document__text">2014年4月1日の四半期ランキングを取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20140408-w</span></p>
+<p class="c-document__text">2014年4月8日(火曜日)の週間ランキングを取得するURLです。</p>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20140501-w</span></p>
+<p class="c-document__text">【×指定できません】<br>週間は火曜日分以外提供していないため、2014年5月1日(木曜日)を指定するURLはエラーになります。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20140402-m</span></p>
+<p class="c-document__text">【×指定できません】<br>月間は毎月1日分以外提供していないため、4月2日を指定するURLはエラーになります。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20140403-q</span></p>
+<p class="c-document__text">【×指定できません】<br>四半期は毎月1日分以外提供していないため、4月3日を指定するURLはエラーになります。</p>
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="out-detail">outパラメータの詳細</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">出力形式を指定できます。<br>jsonまたはyamlまたはphpで指定してください。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">yaml</span></div>
+<div>YAML形式(デフォルト)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">json</span></div>
+<div>JSON形式</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">php</span></div>
+<div>PHPの<span class="c-inlinecode">serialize()</span></div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">jsonp</span></div>
+<div>JSONP形式</div>
+</li>
+</ul>
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">JSONPの使い方</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">JSONPを利用することでJavaScriptから直接、APIを利用できるようになります。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">callback</span></div>
+<div>コールバック関数名。コールバック関数名には半角英数字など<span class="c-inlinecode">/^$?[a-zA-Z0-9\[\]\.\_]+$/</span> (perl) の正規表現に一致する関数名を指定してください。</div>
+</li>
+</ul>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?out=jsonp&amp;callback=call&amp;rtype=20130501-m</span></p>
+<p class="c-document__text">JSONP形式でコールバック関数名を<span class="c-inlinecode">call</span>にしたい場合のURLです。2013年5月1日の月間ランキングを取得します。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">YAML形式の出力に関する動作について</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">出力形式にYAMLを指定した場合、パラメータを指定する事で利用するライブラリを変更できます。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>libtype</td>
+<td>int</td>
+<td>
+<p class="c-document__text">利用するライブラリを指定できます。<br>未指定もしくは<span class="c-inlinecode">1</span>以下の値を指定した場合、従来通りのライブラリを利用します。<br><span class="c-inlinecode">2</span>以上の値を指定すると、新ライブラリを利用します。<br>新ライブラリでは以下の点が従来のライブラリと異なります。</p>
+<ul class="c-list">
+<li>文字列と数値の型指定が厳格化します。</li>
+<li>マルチバイト文字や一部の制御文字がエスケープ処理されます。</li>
+</ul><!-- /.c-list -->
+</td>
+</tr>
+</table>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20130501-m&amp;libtype=1</span></p>
+<p class="c-document__text">従来通りのライブラリで出力を行ないます。<br>文字列が格納される部分が数値で構成されている場合でも、数値はダブルクォートで囲まれません。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/rank/rankget/?rtype=20130501-m&amp;libtype=2</span></p>
+<p class="c-document__text">新ライブラリで出力を行ないます。<br>文字列が格納される部分が数値で構成されている場合、数値がダブルクォートで囲まれます。</p>
+</section><!-- /.c-document__section-inner -->
+
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="output">出力</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">APIサーバが出力する文字コードはUTF-8です。デフォルトはYAML形式です。<br><span class="c-inlinecode">out</span>パラメータでJSON形式などにも変更できます。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col2-1">
+<col class="c-table-explanation__col2-2">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>要素</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>ncode</td>
+<td>
+<p class="c-document__text">Nコード</p>
+</td>
+</tr>
+<tr>
+<td>pt</td>
+<td>
+<p class="c-document__text">ポイント</p>
+</td>
+</tr>
+<tr>
+<td>rank</td>
+<td>
+<p class="c-document__text">順位<span class="c-inlinecode">1～300</span></p>
+</td>
+</tr>
+</table>
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">Nコードから作品情報の取得</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text"><a href="/man/api/">なろう小説API</a>を利用することでNコードから作品情報を取得できます。</p>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/novelapi/api/?ncode=n0001a-n1111b-n9999d</span></p>
+<p class="c-document__text"><span class="c-inlinecode">N0001A</span>,<span class="c-inlinecode">N1111B</span>,<span class="c-inlinecode">N9999D</span>を取得するなろう小説APIのURLです。 </p>
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="constraints">制約について</h3><!-- /.c-title .c-title--md -->
+<p class="c-document_text">このAPIで出力するランキングのデータは2013年5月1日以降の「<a href="https://yomou.syosetu.com/rank/top/">小説を読もう！で公開しているランキング</a>」を蓄積(バックアップ)したものですが、すべてのランキングの蓄積/提供はサーバリソースの制約上、不可能です。週間は毎週火曜日のみ、月間、四半期は毎月1日のランキングを蓄積しAPIで提供しています。</p>
+<p class="c-document_text">そのため、週間の場合は火曜日以外の日付を指定すると<span class="c-inlinecode">DATE ERROR[2]</span>が、月間と四半期の場合は1日以外を指定すると<span class="c-inlinecode">DATE ERROR[1]</span>がエラーとして表示されます。</p>
+<p class="c-document_text">また、「<a href="https://yomou.syosetu.com/rank/top/">小説を読もう！で公開しているランキング</a>」の日間ランキングは1日3回更新されていますが、このAPIでは午前4時～午前7時に作成した日間ランキングのみを蓄積しAPIで提供しています。<br>予めご了承願います。</p>
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="limit">利用制限</h3><!-- /.c-title .c-title--md -->
+<div class="c-attention">利用制限は現在、休止しています。<br>
+負荷状況により今後、導入されることがあるためキャッシュの導入など、利用制限を想定したシステム設計をお願いします。ただし、古い情報を誤って掲載しないよう一定期間(長くても２週間)でキャッシュの更新・削除をお願いします。</div><!-- /.c-attention -->
+<p class="c-document__text">IPアドレスごとに利用制限を行います。<br>1日の利用上限は80,000または転送量上限400MByteです。<br>利用制限は初回アクセスから24時間が適用範囲です。<br>初回のアクセスから24時間後に回数と転送量を記録していたカウンタと初回アクセス時刻をリセットします。<br>なお、1日の利用上限を超えた場合、エラーの発生確率が増します。<br>混雑状況にもよりますが、リクエスト回数または転送量が利用上限の120%を超えるとほとんど接続できなくなります。</p>
+<p class="c-document__text">備考：利用制限カウンタは厳密ではなく多少のマージンを設けてあります。<br>転送量は圧縮することで減らせます。</p>
+<div class="c-tips">
+<div class="c-tips__title">転送量制限の回避方法</div><!-- /.c-tips__title -->
+<ul class="c-list">
+<li><span class="c-inlinecode">gzip=5</span>を指定し、gzipファイルで受信する。<br>デメリットとして受け取り側で解凍する手間は発生するが、かなりの転送量を削減できる。</li>
+<li>YAML形式を使う。一番容量が小さいため。</li>
+</ul><!-- /.c-list -->
+</div><!-- /.c-tips -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="delay">遅延について</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">データベースサーバは日本国内の複数拠点に分散されていることがあります。<br>APIから小説データベースに接続した場合、原則としてスレーブサーバにつながります。<br>マスタサーバとスレーブサーバ間は10秒以内にデータを同期しています。</p>
+<p class="c-document__text">しかし、何らかのネットワーク障害が発生した場合、遅延が発生し、サーバによってデータにばらつきが生じることがあります。<br>また、実際にランキングのデータが修正されてからAPIに反映されるまで遅れがあります。</p>
+</section><!-- /.c-document__section -->
+</article><!-- /.c-document__article -->
+
+<nav class="c-document__navigation">
+<div class="c-subbar">
+<dl class="c-subnav">
+<dt>目次</dt>
+<dd><a href="#ouput-style">出力形式</a></dd>
+<dd><a href="#api-url">APIのURL</a></dd>
+<dd><a href="#get-parameter">GETパラメータ</a></dd>
+<dd><a href="#out-detail">outパラメータの詳細</a></dd>
+<dd><a href="#output">出力</a></dd>
+<dd><a href="#constraints">制約について</a></dd>
+<dd><a href="#limit">利用制限</a></dd>
+<dd><a href="#delay">遅延について</a></dd>
+</dl><!-- /.c-subnav -->
+
+
+</div><!-- /.c-sub-bar -->
+</nav><!-- /.c-document__navigation -->
+</div><!-- /.c-document --></main><!-- /.l-main -->
+
+<footer class="l-footer">
+<div class="p-footer">
+<div class="p-footer__backtotop"><a href="#">このページの上に戻る</a></div>
+<div class="p-footer__author">企画&運営<a href="https://hinaproject.co.jp/" target="_blank">HinaProject Inc.</a></div>
+</div><!-- /.p-footer -->
+</footer><!-- /.l-footer --></div><!-- /.l-content -->
+</div><!-- /.l-page -->
+
+</body>
+</html>

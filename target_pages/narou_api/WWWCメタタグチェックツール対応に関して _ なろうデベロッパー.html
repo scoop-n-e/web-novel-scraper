@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>WWWCメタタグチェックツール対応に関して | なろうデベロッパー</title>
+<meta name="description" content="なろうデベロッパー - 小説サイトが簡単に作れます:小説家になろうグループ" />
+<meta name="keywords" content="ウェブAPI 小説サイト 開発者支援" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/base_narou-dev.css?sfzd9j">
+
+<script type="text/javascript"><!--
+var domain = 'syosetu.com';
+//--></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://static.syosetu.com/view/js/lib/jquery.hina.js?rq7apb"></script>
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/p_wwwc.css?sf9es3"/>
+
+
+
+
+
+
+</head>
+<body>
+
+<header class="l-header">
+<div class="p-header">
+<h1 class="p-header__logo">
+<a href="/"><img src="https://static.syosetu.com/sub/devview/images/naroudev-logo.png?rrhuul" alt="なろうデベロッパー"></a>
+</h1><!-- /.p-header-logo -->
+<div class="p-header__narou">
+<a href="https://syosetu.com/" target="_blank"><img src="https://static.syosetu.com/sub/devview/images/logo_narou.png?rrhuul" alt="小説家になろう"></a>
+</div><!-- /.p-header-narou -->
+</div><!-- /.p-header -->
+</header><!-- /.l-header -->
+<div class="l-container">
+<aside class="l-sidebar">
+<div class="p-globalnav">
+<ul class="p-globalnav__list">
+<li><a href="/">トップページ</a></li>
+<li><a href="/man/man/">技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">なろうの仕様に関して</div>
+<ul>
+<li><a href="/man/url/">URLの法則</a></li>
+<li><a href="/man/wwwc/">WWWCメタタグチェックツール対応に関して</a></li>
+</ul>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/blogatom/">活動報告Atom</a></li>
+<li><a href="/man/atom/">小説Atom</a></li>
+</ul>
+<div class="p-globalnav__head">ウィジェット利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/nish/">なろう小説インラインサーチウィジェット</a></li>
+</ul>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/api/">なろう小説API</a></li>
+<li><a href="/man/rankapi/">なろう小説ランキングAPI</a></li>
+<li><a href="/man/rankinapi/">なろう殿堂入りAPI</a></li>
+<li><a href="/man/userapi/">なろうユーザ検索API</a></li>
+</ul>
+</li>
+<li><a href="/xman/man/">R18技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/blogatom/">X活動報告Atom</a></li>
+<li><a href="/xman/atom/">R18小説Atom</a></li>
+</ul>
+</li>
+<li>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/api/">なろうR18小説API</a></li>
+</ul>
+</li>
+<li><a href="https://hinaproject.co.jp/hina_guideline.html" target="_blank">商標ガイドライン</a></li>
+</ul><!-- /.p-globalnav -->
+</div><!-- /.p-globalnav -->
+</aside><!-- /.l-globalnav -->
+<div class="l-content">
+
+<main class="l-main">
+<h2 class="c-title c-title--lg">WWWCメタタグチェックツール対応に関して</h2><!-- /.c-title .c-title--lg -->
+<div class="c-document">
+<article class="c-document__article">
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="whats-wwwc">WWWCとは？</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text"><a href="http://www.nakka.com/wwwc/" target="_blank">WWWC</a>を使うことでウェブサイトの更新をチェックできます。<br>以下、WWWCサイト上より引用</p>
+
+<blockquote class="c-quote" cite="http://www.nakka.com/wwwc/">WWWCはWindowsで動作するWebページの更新チェッカです。<br>よく見るWebページのURLを登録しておいて更新のチェックを行い、更新されたWebページを通知してくれるというものです。<br>WWWCに登録してあるURLを最大30個同時にチェックを行います。自分でブラウザを使用して更新されてないか見に行くより遥かに高速に更新のチェックを行うことができます。<br>基本的な使い方はWindowsに付属しているエクスプローラ(ファイルを操作するソフト)と同じ使い方です。<br>WWWCはフリーソフトウェアです。配布、転載は自由です、特に許可を取る必要はありません。</blockquote>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="narou-wwwc">小説家になろうグループのWWWC対応状況</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">作品ページ(例：<span class="c-inlinecode">https://ncode.syosetu.com/n0000a/</span>)はWWWCなどのチェックツールに対応しています。<br>作品の更新をブラウザの起動なしで素早く知りたい場合などにご利用下さい。</p>
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">&lt;meta&gt;タグの仕様</h4><!-- /.c-title .c-title--sm -->
+
+<p class="c-document__text">WWWCに更新日を伝えるために、作品ページには<span class="c-inlinecode">&lt;head&gt;～&lt;/head&gt;</span>タグ内に以下のような<span class="c-inlinecode">&lt;meta&gt;</span>タグを埋め込んでいます。</p>
+
+<p class="c-document__text"><span class="c-inlinecode">&lt;meta name="WWWC" content="2009/07/21 00:00"&gt;</span></p>
+
+<p class="c-document__text">日付は作品の最終掲載日です。日付形式は西暦/月/日 時:分の形式です。<br>時刻が更新されるのは作品投稿と次話投稿時のみです。作品編集は時刻反映されません。</p>
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="charactor-code">WWWC接続時の文字コード</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">作品ページはWWWCでアクセスされた場合のみShift_JISで送信します。<br>小説家になろうの文字コードは原則としてUTF-8となっております。しかし、WWWCはUTF-8を読むことができず、文字化けしてしまいます。<br>この問題を解決するため、UserAgentにWWWCの文字が入っている場合のみ、Shift_JISに変換して送信しております。<br>UTF-8→Shift_JISへの強制変換です。一部の文字が文字化けする場合があります。予めご了承ください。</p>
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="other-wwwc">WWWC以外で作品の更新を把握する手段</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">小説家になろうグループでは作者単位の<a href="/man/atom/">Atom</a>も配信しています。更新チェックにご利用ください。</p>
+</section><!-- /.c-document__section -->
+
+</article><!-- /.c-document__article -->
+
+<nav class="c-document__navigation">
+<div class="c-subbar">
+<dl class="c-subnav">
+<dt>目次</dt>
+<dd><a href="#whats-wwwc">WWWCとは？</a></dd>
+<dd><a href="#narou-wwwc">小説家になろうグループのWWWC対応状況</a></dd>
+<dd><a href="#charactor-code">WWWC接続時の文字コード</a></dd>
+<dd><a href="#other-wwwc">WWWC以外で作品の更新を把握する手段</a></dd>
+</dl><!-- /.c-subnav -->
+
+
+</div><!-- /.c-sub-bar -->
+</nav><!-- /.c-document__navigation -->
+</div><!-- /.c-document --></main><!-- /.l-main -->
+
+<footer class="l-footer">
+<div class="p-footer">
+<div class="p-footer__backtotop"><a href="#">このページの上に戻る</a></div>
+<div class="p-footer__author">企画&運営<a href="https://hinaproject.co.jp/" target="_blank">HinaProject Inc.</a></div>
+</div><!-- /.p-footer -->
+</footer><!-- /.l-footer --></div><!-- /.l-content -->
+</div><!-- /.l-page -->
+
+</body>
+</html>

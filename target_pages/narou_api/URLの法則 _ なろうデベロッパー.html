@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>URLの法則 | なろうデベロッパー</title>
+<meta name="description" content="なろうデベロッパー - 小説サイトが簡単に作れます:小説家になろうグループ" />
+<meta name="keywords" content="ウェブAPI 小説サイト 開発者支援" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/base_narou-dev.css?sfzd9j">
+
+<script type="text/javascript"><!--
+var domain = 'syosetu.com';
+//--></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://static.syosetu.com/view/js/lib/jquery.hina.js?rq7apb"></script>
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/p_url.css?sf9es2"/>
+
+
+
+
+
+
+</head>
+<body>
+<header class="l-header">
+<div class="p-header">
+<h1 class="p-header__logo">
+<a href="/"><img src="https://static.syosetu.com/sub/devview/images/naroudev-logo.png?rrhuul" alt="なろうデベロッパー"></a>
+</h1><!-- /.p-header-logo -->
+<div class="p-header__narou">
+<a href="https://syosetu.com/" target="_blank"><img src="https://static.syosetu.com/sub/devview/images/logo_narou.png?rrhuul" alt="小説家になろう"></a>
+</div><!-- /.p-header-narou -->
+</div><!-- /.p-header -->
+</header><!-- /.l-header -->
+<div class="l-container">
+<aside class="l-sidebar">
+<div class="p-globalnav">
+<ul class="p-globalnav__list">
+<li><a href="/">トップページ</a></li>
+<li><a href="/man/man/">技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">なろうの仕様に関して</div>
+<ul>
+<li><a href="/man/url/">URLの法則</a></li>
+<li><a href="/man/wwwc/">WWWCメタタグチェックツール対応に関して</a></li>
+</ul>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/blogatom/">活動報告Atom</a></li>
+<li><a href="/man/atom/">小説Atom</a></li>
+</ul>
+<div class="p-globalnav__head">ウィジェット利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/nish/">なろう小説インラインサーチウィジェット</a></li>
+</ul>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/api/">なろう小説API</a></li>
+<li><a href="/man/rankapi/">なろう小説ランキングAPI</a></li>
+<li><a href="/man/rankinapi/">なろう殿堂入りAPI</a></li>
+<li><a href="/man/userapi/">なろうユーザ検索API</a></li>
+</ul>
+</li>
+<li><a href="/xman/man/">R18技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/blogatom/">X活動報告Atom</a></li>
+<li><a href="/xman/atom/">R18小説Atom</a></li>
+</ul>
+</li>
+<li>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/api/">なろうR18小説API</a></li>
+</ul>
+</li>
+<li><a href="https://hinaproject.co.jp/hina_guideline.html" target="_blank">商標ガイドライン</a></li>
+</ul><!-- /.p-globalnav -->
+</div><!-- /.p-globalnav -->
+</aside><!-- /.l-globalnav -->
+<div class="l-content">
+
+<main class="l-main">
+<h2 class="c-title c-title--lg">URLの法則</h2><!-- /.c-title .c-title--lg -->
+
+
+<div class="c-document">
+<article class="c-document__article">
+
+<section class="c-document__section">
+<p class="c-document__text">小説家になろう各ページURL法則について<br>以下に記す形式のURLはすべてリンクフリーで、許可なくリンクすることができます。</p>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="novel">作品ページ</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">Nコードは作品を管理するためのコードです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://ncode.syosetu.com/Nコード/</span></p>
+<p class="c-document__text">上記URLにリンクしていただければ適切なURLに誘導します。</p>
+<p class="c-document__text">R18の場合(ノクターンノベルズ/ムーンライトノベルズ/ミッドナイトノベルズなど)</p>
+<ul class="c-list">
+<li>R18作品に非R18用URLで接続した場合、<span class="c-inlinecode">novel18.syosetu.com</span>に自動転送します</li>
+<li>非R18作品にR18用URLで接続した場合、<span class="c-inlinecode">ncode.syosetu.com</span>に自動転送します</li>
+</ul><!-- /.c-list -->
+
+<div class="c-tips">
+<div class="c-tips__title">レスポンス</div><!-- /.c-tips__title -->
+<p class="c-tips__text">SEOの観点から<span class="c-inlinecode">novel18.</span>と<span class="c-inlinecode">ncode.</span>間の移動はHTTPレスポンスヘッダで <span class="c-inlinecode">301 Moved Permanently</span>を返します。
+それ以外の場合は永続的ではなく、一時的な移動なので<span class="c-inlinecode">302</span>を返します。</p>
+</div><!-- /.c-tips -->
+<div class="c-tips">
+<div class="c-tips__title">端末判別</div><!-- /.c-tips__title -->
+<p class="c-tips__text">従来は<span class="c-inlinecode">netUserAgentMobile</span>を使用していましたが、メモリ使用量などの面から軽量ライブラリを独自開発しました。</p>
+</div><!-- /.c-tips -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="mypage">マイページ</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">ユーザIDは数値です。ユーザごとに発行されています。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://mypage.syosetu.com/ユーザID/</span></p>
+</section><!-- /.c-document__section -->
+
+</article><!-- /.c-document__article -->
+
+<nav class="c-document__navigation">
+<div class="c-subbar">
+<dl class="c-subnav">
+<dt>目次</dt>
+<dd><a href="#novel">作品ページ</a></dd>
+<dd><a href="#mypage">マイページ</a></dd>
+</dl><!-- /.c-subnav -->
+
+
+</div><!-- /.c-sub-bar -->
+</nav><!-- /.c-document__navigation -->
+</div><!-- /.c-document --></main><!-- /.l-main -->
+
+<footer class="l-footer">
+<div class="p-footer">
+<div class="p-footer__backtotop"><a href="#">このページの上に戻る</a></div>
+<div class="p-footer__author">企画&運営<a href="https://hinaproject.co.jp/" target="_blank">HinaProject Inc.</a></div>
+</div><!-- /.p-footer -->
+</footer><!-- /.l-footer --></div><!-- /.l-content -->
+</div><!-- /.l-page -->
+
+</body>
+</html>

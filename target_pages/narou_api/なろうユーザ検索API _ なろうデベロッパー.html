@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>なろうユーザ検索API | なろうデベロッパー</title>
+<meta name="description" content="なろうデベロッパー - 小説サイトが簡単に作れます:小説家になろうグループ" />
+<meta name="keywords" content="ウェブAPI 小説サイト 開発者支援" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/base_narou-dev.css?sfzd9j">
+
+<script type="text/javascript"><!--
+var domain = 'syosetu.com';
+//--></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://static.syosetu.com/view/js/lib/jquery.hina.js?rq7apb"></script>
+
+<link rel="stylesheet" media="all" href="https://static.syosetu.com/sub/devview/css/p_userapi.css?sf9es2"/>
+
+
+
+
+
+
+</head>
+<body>
+
+<header class="l-header">
+<div class="p-header">
+<h1 class="p-header__logo">
+<a href="/"><img src="https://static.syosetu.com/sub/devview/images/naroudev-logo.png?rrhuul" alt="なろうデベロッパー"></a>
+</h1><!-- /.p-header-logo -->
+<div class="p-header__narou">
+<a href="https://syosetu.com/" target="_blank"><img src="https://static.syosetu.com/sub/devview/images/logo_narou.png?rrhuul" alt="小説家になろう"></a>
+</div><!-- /.p-header-narou -->
+</div><!-- /.p-header -->
+</header><!-- /.l-header -->
+<div class="l-container">
+<aside class="l-sidebar">
+<div class="p-globalnav">
+<ul class="p-globalnav__list">
+<li><a href="/">トップページ</a></li>
+<li><a href="/man/man/">技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">なろうの仕様に関して</div>
+<ul>
+<li><a href="/man/url/">URLの法則</a></li>
+<li><a href="/man/wwwc/">WWWCメタタグチェックツール対応に関して</a></li>
+</ul>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/blogatom/">活動報告Atom</a></li>
+<li><a href="/man/atom/">小説Atom</a></li>
+</ul>
+<div class="p-globalnav__head">ウィジェット利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/nish/">なろう小説インラインサーチウィジェット</a></li>
+</ul>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/man/api/">なろう小説API</a></li>
+<li><a href="/man/rankapi/">なろう小説ランキングAPI</a></li>
+<li><a href="/man/rankinapi/">なろう殿堂入りAPI</a></li>
+<li><a href="/man/userapi/">なろうユーザ検索API</a></li>
+</ul>
+</li>
+<li><a href="/xman/man/">R18技術マニュアル</a></li>
+<li>
+<div class="p-globalnav__head">Atomフィード</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/blogatom/">X活動報告Atom</a></li>
+<li><a href="/xman/atom/">R18小説Atom</a></li>
+</ul>
+</li>
+<li>
+<div class="p-globalnav__head">API利用マニュアル</div><!-- /.p-globalnav__head -->
+<ul>
+<li><a href="/xman/api/">なろうR18小説API</a></li>
+</ul>
+</li>
+<li><a href="https://hinaproject.co.jp/hina_guideline.html" target="_blank">商標ガイドライン</a></li>
+</ul><!-- /.p-globalnav -->
+</div><!-- /.p-globalnav -->
+</aside><!-- /.l-globalnav -->
+<div class="l-content">
+
+<main class="l-main">
+<h2 class="c-title c-title--lg">なろうユーザ検索API</h2><!-- /.c-title .c-title--lg -->
+<div class="c-document">
+<article class="c-document__article">
+
+<section class="c-document__section">
+<p class="c-document__text">なろうユーザ検索APIでは小説家になろうに登録されたユーザの情報を取得できます。<br>このAPIでは非公開情報の取得は行なえません。</p>
+<p class="c-document__text">なろうAPIはHTTPでのリクエストに対してJSON形式、JSONP形式又はYAML形式、PHPの<span class="c-inlinecode">serialize</span>で応答します。<br>実際にユーザ情報が更新されてからなろうユーザ検索APIに反映されるまで平均5分程度(最大2時間)の誤差があります。</p>
+<div class="c-attention">APIを使うためにはJavaScriptあるいはPerl/PHP/Ruby/Java/C言語などでプログラミングが必要です。</div><!-- /.c-attention -->
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="ouput-style">出力形式</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">JSON形式、JSONP形式またはYAML形式、PHPの<span class="c-inlinecode">serialize</span><br>標準はYAML形式となっていますが、<span class="c-inlinecode">out</span>パラメータで変更できます。<br>文字コードはUTF-8です。</p>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="api-url">APIのURL</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/</span></p>
+<p class="c-document__text">GETで送信。POSTでは受信できません。<br>日本語などマルチバイト文字送信時は文字コードをUTF-8にし、URLエンコードしてください。</p>
+</section><!-- /.c-document__section -->
+
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="get-parameter">出力GETパラメータ</h3><!-- /.c-title .c-title--md -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>gzip</td>
+<td>int(1～5)</td>
+<td>
+<p class="c-document__text">gzip圧縮してgzipファイルとして返します。<br>gzip圧縮レベルを<span class="c-inlinecode">1～5</span>で指定できます。<br>転送量上限を減らすためにも推奨</p>
+</td>
+</tr>
+
+<tr>
+<td>out</td>
+<td>string</td>
+<td>
+<p class="c-document__text">出力形式をyamlまたはjsonまたはphpを指定。<br>未指定時はYAMLになる。<a href="#out-detail">outパラメータの詳細</a></p>
+</td>
+</tr>
+<tr>
+<td>of</td>
+<td>string</td>
+<td>
+<p class="c-document__text">出力する項目を個別に指定できます。未指定時は全項目出力されます。<br>転送量軽減のため、このパラメータの使用が推奨されます。<br>複数項目を出力する場合は-で区切ってください。詳しくは<a href="#output">出力</a>の項目をご覧ください。</p>
+</td>
+</tr>
+<tr>
+<td>lim</td>
+<td>int(1～500)</td>
+<td>
+<p class="c-document__text">最大出力数を指定できます。最低<span class="c-inlinecode">1</span>、最高<span class="c-inlinecode">500</span>です。<br>半角数字で指定してください。<br>指定しない場合は20件になります。</p>
+</td>
+</tr>
+<tr>
+<td>st</td>
+<td>int(1～2000)</td>
+<td>
+<p class="c-document__text">表示開始位置の指定です。半角数字で指定してください。<br>たとえば全部で10作品あるとして、3作品目以降の作品情報を取得したい場合は<span class="c-inlinecode">3</span>と指定してください。</p>
+</td>
+</tr>
+<tr>
+<td>order</td>
+<td>string</td>
+<td>
+<p class="c-document__text">出力順序を指定できます。<br>指定しない場合はユーザIDの新しい順となります。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">new</span></div>
+<div>ユーザIDの新しい順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">novelcnt</span></div>
+<div>作品投稿数の多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">reviewcnt</span></div>
+<div>レビュー投稿数の多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">novellength</span></div>
+<div>作品累計文字数の多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">sumglobalpoint</span></div>
+<div>総合評価ポイントの合計の多い順</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">old</span></div>
+<div>ユーザIDの古い順</div>
+</li>
+</ul>
+</td>
+</tr>
+</table><!-- /.c-table-explanation -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="out-detail">outパラメータの詳細</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">出力形式を指定できます。<br>以下の形式から指定してください。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">yaml</span></div>
+<div>YAML形式(デフォルト)</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">json</span></div>
+<div>JSON形式</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">jsonp</span></div>
+<div>JSONP形式</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">php</span></div>
+<div>PHPの<span class="c-inlinecode">serialize()</span></div>
+</li>
+</ul>
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">JSONPの使い方</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">JSONPを利用することでJavaScriptから直接、APIを利用できるようになります。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">callback</span></div>
+<div>コールバック関数名。コールバック関数名には半角英数字など<span class="c-inlinecode">/^$?[a-zA-Z0-9\[\]\.\_]+$/</span> (perl) の正規表現に一致する関数名を指定してください。</div>
+</li>
+</ul>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?out=jsonp&amp;callback=call</span></p>
+<p class="c-document__text">JSONP形式でコールバック関数名を<span class="c-inlinecode">call</span>にしたい場合のURLです。</p>
+</section><!-- /.c-document__section-inner -->
+
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">YAML形式の出力に関する動作について</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">出力形式にYAMLを指定した場合、パラメータを指定する事で利用するライブラリを変更できます。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>libtype</td>
+<td>int</td>
+<td>
+<p class="c-document__text">利用するライブラリを指定できます。<br>未指定もしくは<span class="c-inlinecode">1</span>以下の値を指定した場合、従来通りのライブラリを利用します。<br><span class="c-inlinecode">2</span>以上の値を指定すると、新ライブラリを利用します。<br>新ライブラリでは以下の点が従来のライブラリと異なります。</p>
+<ul class="c-list">
+<li>文字列と数値の型指定が厳格化します。</li>
+<li>マルチバイト文字や一部の制御文字がエスケープ処理されます。</li>
+</ul><!-- /.c-list -->
+</td>
+</tr>
+</table>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?libtype=1</span></p>
+<p class="c-document__text">従来通りのライブラリで出力を行ないます。<br>ユーザ名やユーザ名のフリガナ等、文字列が格納される部分が数値で構成されている場合でも、数値はダブルクォートで囲まれません。</p>
+
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?libtype=2</span></p>
+<p class="c-document__text">新ライブラリで出力を行ないます。<br>ユーザ名やユーザ名のフリガナ等、文字列が格納される部分が数値で構成されている場合、数値がダブルクォートで囲まれます。</p>
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="extraction-condition">条件抽出GETパラメータ</h3><!-- /.c-title .c-title--md -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">検索単語指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>word</td>
+<td>string</td>
+<td>
+<p class="c-document__text">単語を指定できます。文字コードはUTF-8でURLエンコードしてください。<br>半角または全角スペースで区切るとAND抽出になります。部分一致でHITします。<br>検索の対象はユーザ名とユーザ名のフリガナです。</p>
+</td>
+</tr>
+
+<tr>
+<td>notword</td>
+<td>string</td>
+<td>
+<p class="c-document__text">含みたくない単語を指定できます。文字コードはUTF-8でURLエンコードしてください。<br>スペースで区切ることにより含ませない単語を増やせます。部分一致で除外されます。<br>除外の対象はユーザ名とユーザ名のフリガナです。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">ユーザID指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>userid</td>
+<td>int</td>
+<td>
+<p class="c-document__text">ユーザIDで抽出可能。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">頭文字指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>name1st</td>
+<td>string</td>
+<td>
+<p class="c-document__text">抽出するユーザのユーザ名のフリガナの頭文字を指定できます。<br>頭文字はユーザ名のフリガナをひらがなに変換し、最初の1文字が「ぁ」～「ん」の場合に対象となります。<br>「ぱ」や「ば」等の半濁音や濁音は清音として扱われます。<br>漢字や英数字が頭文字のユーザは対象外です。</p>
+</td>
+</tr>
+</table>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">作品投稿数指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>minnovel</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出するユーザの作品投稿数の下限を指定できます。<br>作品投稿件数が指定された数値以上のユーザを抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>maxnovel</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出するユーザの作品投稿数の上限を指定できます。<br>作品投稿件数が指定された数値以下のユーザを抽出します。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?minnovel=10</span></p>
+<p class="c-document__text">作品投稿数が10作品以上のユーザ情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?maxnovel=100</span></p>
+<p class="c-document__text">作品投稿数が100作品以下のユーザ情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?minnovel=5&amp;maxnovel=30</span></p>
+<p class="c-document__text">作品投稿数が5作品以上30作品以下のユーザ情報を取得するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm">レビュー投稿数指定</h4><!-- /.c-title .c-title--sm -->
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>パラメータ</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>minreview</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出するユーザのレビュー投稿数の下限を指定できます。<br>レビュー投稿件数が指定された数値以上のユーザを抽出します。</p>
+</td>
+</tr>
+
+<tr>
+<td>maxreview</td>
+<td>int</td>
+<td>
+<p class="c-document__text">抽出するユーザのレビュー投稿数の上限を指定できます。<br>レビュー投稿件数が指定された数値以下のユーザを抽出します。</p>
+</td>
+</tr>
+</table>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?minreview=50</span></p>
+<p class="c-document__text">レビュー投稿数が50件以上のユーザ情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?maxreview=100</span></p>
+<p class="c-document__text">レビュー投稿数が100件以下のユーザ情報を取得するURLです。</p>
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?minreview=100&amp;maxreview=500</span></p>
+<p class="c-document__text">レビュー投稿数が100件以上500件以下のユーザ情報を取得するURLです。</p>
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="output">出力</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">APIサーバが出力する文字コードはUTF-8です。デフォルトはYAML形式です。<br>outパラメータでJSON形式などにも変更できます。<br>最初の要素には全ユーザ情報出力数が入り、以降、一ユーザずつ情報が入っています。</p>
+<table class="c-table-explanation">
+<colgroup>
+<col class="c-table-explanation__col1-1">
+<col class="c-table-explanation__col1-2">
+<col class="c-table-explanation__col1-3">
+</colgroup>
+<tr class="c-table-explanation__head">
+<th>要素</th>
+<th>値</th>
+<th>説明</th>
+</tr>
+<tr>
+<td>allcount</td>
+<td>int</td>
+<td>
+<p class="c-document__text">全ユーザ情報出力数です。<br>(注：登録ユーザ数の増加に伴い、APIへの反映遅れが生じる場合があります)</p>
+</td>
+</tr>
+
+<tr>
+<td>userid</td>
+<td>int</td>
+<td>
+<p class="c-document__text">ユーザID</p>
+</td>
+</tr>
+
+<tr>
+<td>name</td>
+<td>string</td>
+<td>
+<p class="c-document__text">ユーザ名</p>
+</td>
+</tr>
+
+<tr>
+<td>yomikata</td>
+<td>string</td>
+<td>
+<p class="c-document__text">ユーザ名のフリガナ</p>
+</td>
+</tr>
+
+<tr>
+<td>name1st</td>
+<td>string</td>
+<td>
+<p class="c-document__text">ユーザ名のフリガナの頭文字<br>ひらがな以外の場合は<span class="c-inlinecode">null</span>または空文字となります。</p>
+</td>
+</tr>
+
+<tr>
+<td>novel_cnt</td>
+<td>int</td>
+<td>
+<p class="c-document__text">作品投稿数</p>
+</td>
+</tr>
+
+<tr>
+<td>review_cnt</td>
+<td>int</td>
+<td>
+<p class="c-document__text">レビュー投稿数</p>
+</td>
+</tr>
+
+<tr>
+<td>novel_length</td>
+<td>int</td>
+<td>
+<p class="c-document__text">作品累計文字数<br>スペースや改行は文字数としてカウントしません。</p>
+</td>
+</tr>
+
+<tr>
+<td>sum_global_point</td>
+<td>int</td>
+<td>
+<p class="c-document__text">総合評価ポイントの合計<br>投稿済作品でそれぞれ獲得した総合評価ポイントの合計です。</p>
+</td>
+</tr>
+</table>
+<section class="c-document__section-inner">
+<h4 class="c-title c-title--sm" id="output-of-parammeter">ofパラメータ</h4><!-- /.c-title .c-title--sm -->
+<p class="c-document__text">出力する項目を個別に指定できます。未指定時は全項目出力されます。転送量軽減のため、このパラメータの使用が推奨されます。<br>複数項目を出力する場合はハイフン(-)記号で区切ってください。</p>
+<ul class="c-list-explanation">
+<li>
+<div><span class="c-list-explanation__value">u</span></div>
+<div>userid</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">n</span></div>
+<div>name</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">y</span></div>
+<div>yomikata</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">1</span></div>
+<div>name1st</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">nc</span></div>
+<div>novel_cnt</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">rc</span></div>
+<div>review_cnt</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">nl</span></div>
+<div>novel_length</div>
+</li>
+<li>
+<div><span class="c-list-explanation__value">sg</span></div>
+<div>sum_global_point</div>
+</li>
+</ul><!-- /.c-list-explanation -->
+<p class="c-document__text"><span class="c-inlinecode">https://api.syosetu.com/userapi/api/?of=u-n&amp;order=sumglobalpoint</span></p>
+<p class="c-document__text">ユーザIDとユーザ名を総合評価ポイントの合計の多い順で取得するURLです。<br><span class="c-inlinecode">u</span>と<span class="c-inlinecode">n</span>を指定しています。</p>
+</section><!-- /.c-document__section-inner -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="limit">利用制限</h3><!-- /.c-title .c-title--md -->
+<div class="c-attention">利用制限は現在、休止しています。<br>
+負荷状況により今後、導入されることがあるためキャッシュの導入など、利用制限を想定したシステム設計をお願いします。ただし、古い情報を誤って掲載しないよう一定期間(長くても２週間)でキャッシュの更新・削除をお願いします。</div><!-- /.c-attention -->
+<p class="c-document__text">IPアドレスごとに利用制限を行います。<br>1日の利用上限は80,000または転送量上限400MByteです。<br>利用制限は初回アクセスから24時間が適用範囲です。<br>初回のアクセスから24時間後に回数と転送量を記録していたカウンタと初回アクセス時刻をリセットします。<br>なお、1日の利用上限を超えた場合、エラーの発生確率が増します。<br>混雑状況にもよりますが、リクエスト回数または転送量が利用上限の120%を超えるとほとんど接続できなくなります。</p>
+<p class="c-document__text">備考：利用制限カウンタは厳密ではなく多少のマージンを設けてあります。<br>転送量は圧縮することで減らせます。</p>
+<div class="c-tips">
+<div class="c-tips__title">転送量制限の回避方法</div><!-- /.c-tips__title -->
+<ul class="c-list">
+<li><span class="c-inlinecode">gzip=5</span>を指定し、gzipファイルで受信する。<br>デメリットとして受け取り側で解凍する手間は発生するが、かなりの転送量を削減できる。</li>
+<li>YAML形式を使う。一番容量が小さいため。</li>
+<li><a href="#output-of-parammeter">ofパラメータ</a>を使い、必要な項目のみを出力する。</li>
+</ul><!-- /.c-list -->
+</div><!-- /.c-tips -->
+</section><!-- /.c-document__section -->
+<section class="c-document__section">
+<h3 class="c-title c-title--md" id="delay">遅延について</h3><!-- /.c-title .c-title--md -->
+<p class="c-document__text">データベースサーバは日本国内の複数拠点に分散されていることがあります。<br>APIから小説データベースに接続した場合、原則としてスレーブサーバにつながります。<br>マスタサーバとスレーブサーバ間は10秒以内にデータを同期しています。</p>
+<p class="c-document__text">しかし、何らかのネットワーク障害が発生した場合、遅延が発生し、サーバによってデータにばらつきが生じることがあります。<br>また、実際にユーザ情報が更新されてからなろうユーザ検索APIに反映されるまで平均5分程度(最大2時間)の誤差があります。</p>
+<p class="c-document__text">以下の項目に関してはキャッシュの都合上、最大24時間程度の遅れがあります。</p>
+<ul class="c-list">
+<li><span class="c-inlinecode">novel_cnt</span></li>
+<li><span class="c-inlinecode">review_cnt</span></li>
+<li><span class="c-inlinecode">novel_length</span></li>
+<li><span class="c-inlinecode">sum_global_point</span></li>
+</ul><!-- /.c-list -->
+</section><!-- /.c-document__section -->
+</article><!-- /.c-document__article -->
+
+<nav class="c-document__navigation">
+<div class="c-subbar">
+<dl class="c-subnav">
+<dt>目次</dt>
+<dd><a href="#ouput-style">出力形式</a></dd>
+<dd><a href="#api-url">APIのURL</a></dd>
+<dd><a href="#get-parameter">出力GETパラメータ</a></dd>
+<dd><a href="#out-detail">outパラメータの詳細</a></dd>
+<dd><a href="#extraction-condition">条件抽出GETパラメータ</a></dd>
+<dd><a href="#output">出力</a></dd>
+<dd><a href="#limit">利用制限</a></dd>
+<dd><a href="#delay">遅延について</a></dd>
+</dl><!-- /.c-subnav -->
+
+
+</div><!-- /.c-sub-bar -->
+</nav><!-- /.c-document__navigation -->
+</div><!-- /.c-document --></main><!-- /.l-main -->
+
+<footer class="l-footer">
+<div class="p-footer">
+<div class="p-footer__backtotop"><a href="#">このページの上に戻る</a></div>
+<div class="p-footer__author">企画&運営<a href="https://hinaproject.co.jp/" target="_blank">HinaProject Inc.</a></div>
+</div><!-- /.p-footer -->
+</footer><!-- /.l-footer --></div><!-- /.l-content -->
+</div><!-- /.l-page -->
+
+</body>
+</html>
