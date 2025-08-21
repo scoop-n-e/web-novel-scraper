@@ -27,7 +27,6 @@ pub struct NarouNovel {
     pub iszankoku: Option<u32>,  // 1:残酷な描写あり
     pub istensei: Option<u32>,  // 1:転生
     pub istenni: Option<u32>,  // 1:転移
-    // pc_or_kは仕様書にないが保持
     pub global_point: Option<u32>,  // 総合評価ポイント
     pub daily_point: Option<u32>,  // 日間ポイント
     pub weekly_point: Option<u32>,  // 週間ポイント
@@ -43,7 +42,6 @@ pub struct NarouNovel {
     pub kaiwaritu: Option<u32>,  // 会話率
     pub novelupdated_at: Option<String>,  // 最終更新日時
     pub updated_at: Option<String>,  // システム更新日時
-    pub pc_or_k: Option<u32>,  // 1:PC投稿, 2:ケータイ投稿
 }
 
 /// なろうユーザー情報（仕様書順）
@@ -58,16 +56,14 @@ pub struct NarouUser {
     pub review_cnt: Option<u32>,  // レビュー投稿数
     pub novel_length: Option<u32>,  // 累計文字数
     pub sum_global_point: Option<u32>,  // 総合評価ポイント合計
-    // 互換性のために旧名称も保持
-    pub sumglobalpoint: Option<u32>,  // 総合評価ポイント合計（旧名）
 }
 
 /// なろうランキング情報
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouRankingItem {
-    pub rank: u32,
-    pub pt: u32,  // ポイント
     pub ncode: String,
+    pub pt: u32,  // ポイント
+    pub rank: u32,
 }
 
 /// なろう殿堂入り情報
@@ -78,9 +74,9 @@ pub struct NarouRankinResponse {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouRankinRecord {
+    pub rtype: String,  // ランキングタイプ（例: "20130501-d"）
     pub pt: u32,    // ポイント
     pub rank: u32,   // 順位
-    pub rtype: String,  // ランキングタイプ（例: "20130501-d"）
 }
 
 /// なろうAPIレスポンス（配列形式）

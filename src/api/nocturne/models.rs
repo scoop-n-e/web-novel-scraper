@@ -39,12 +39,6 @@ pub struct NocturneNovel {
     pub kaiwaritu: Option<u32>,  // 会話率
     pub novelupdated_at: Option<String>,  // 最終更新日時
     pub updated_at: Option<String>,  // システム更新日時
-    
-    // ノクターン専用フィールド（仕様書にないが実装上必要）
-    pub xid: Option<String>,  // ノクターンID（XID）
-    pub novel_no: Option<u32>,  // 小説番号
-    pub nocturne: Option<u32>,  // 1:ノクターン, 2:ムーンライト, 3:ミッドナイト
-    pub pc_or_k: Option<u32>,  // 1:PC投稿, 2:ケータイ投稿
 }
 
 /// ノクターンAPIレスポンス
