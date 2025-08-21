@@ -33,7 +33,7 @@ impl NarouHallOfFameApiClient {
     pub fn new() -> Self {
         Self {
             client: reqwest::Client::new(),
-            base_url: "https://api.syosetu.com/rank/rankin/".to_string(),
+            base_url: "https://api.syosetu.com/rank/rankin".to_string(),
         }
     }
 
@@ -118,7 +118,11 @@ impl NarouHallOfFameApiClient {
                 rankings: rankings?,
             })
         } else if let Some(map) = data.as_mapping() {
-            if map.contains_key("rtype") && map.contains_key("pt") && map.contains_key("rank") {
+            let rtype_key = serde_yaml::Value::String("rtype".to_string());
+            let pt_key = serde_yaml::Value::String("pt".to_string());
+            let rank_key = serde_yaml::Value::String("rank".to_string());
+            
+            if map.contains_key(&rtype_key) && map.contains_key(&pt_key) && map.contains_key(&rank_key) {
                 let entry = serde_yaml::from_value::<HallOfFameEntry>(data)?;
                 Ok(NarouHallOfFameApiResponse {
                     rankings: vec![entry],
