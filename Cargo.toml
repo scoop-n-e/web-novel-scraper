@@ -15,10 +15,6 @@ path = "src/bin/fetch_ratings.rs"
 name = "fetch_novel"
 path = "src/bin/fetch_novel.rs"
 
-[[bin]]
-name = "parse_api_docs"
-path = "src/bin/parse_api_docs.rs"
-
 [dependencies]
 reqwest = { version = "0.12", features = ["cookies", "json"] }
 fake-useragent = "0.1"
@@ -33,4 +29,3 @@ serde = { version = "1.0", features = ["derive"] }
 chrono = { version = "0.4", features = ["serde"] }
 flate2 = "1.0"
 scraper = "0.17"
-html2md = "0.2"
