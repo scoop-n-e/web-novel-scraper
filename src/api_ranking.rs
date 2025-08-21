@@ -31,8 +31,13 @@ pub struct NarouRankingApiClient {
 
 impl NarouRankingApiClient {
     pub fn new() -> Self {
+        let client = reqwest::Client::builder()
+            .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+            .build()
+            .unwrap();
+        
         Self {
-            client: reqwest::Client::new(),
+            client,
             base_url: "https://api.syosetu.com/rank/rankget/".to_string(),
         }
     }
