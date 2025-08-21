@@ -242,81 +242,59 @@ impl NarouNovelApi {
 /// 小説検索パラメータ
 #[derive(Debug, Clone, Default)]
 pub struct NovelSearchParams {
-    // 検索条件
+    // 出力制御パラメータ（仕様書順）
+    pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
+    // out は内部で自動設定
+    pub of: Option<String>,  // 出力項目指定
+    pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）
+    pub start: Option<u32>,  // 表示開始位置（1-2000）
+    pub order: Option<NarouOrder>,  // ソート順
+    pub libtype: Option<u8>,  // YAMLライブラリ選択（1:従来、2:新ライブラリ）※YAML出力未対応
+    pub updatetype: Option<u8>,  // Atomフィード日付項目（2:general_lastup）※Atom出力未対応
+    
+    // 条件抽出パラメータ（仕様書順）
     pub word: Option<String>,  // 検索単語（スペース区切りでAND検索）
     pub notword: Option<String>,  // 除外単語（スペース区切り）
     pub title: Option<bool>,  // 1でタイトルをword/notwordの検索対象に含める
-    pub writer: Option<String>,  // 作者名検索
-    pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
-    
-    // 検索範囲指定（word/notwordの対象を指定）
     pub ex: Option<bool>,  // あらすじを検索対象に
     pub keyword: Option<bool>,  // キーワードを検索対象に
     pub wname: Option<bool>,  // 作者名を検索対象に
-    
-    pub userid: Option<u32>,  // ユーザーID指定
-    pub genre: Option<u32>,  // ジャンル指定
     pub biggenre: Option<u32>,  // 大ジャンル指定
     pub notbiggenre: Option<u32>,  // 大ジャンル除外
+    pub genre: Option<u32>,  // ジャンル指定
     pub notgenre: Option<String>,  // ジャンル除外（-区切りで複数指定可）
-    
-    // 詳細フィルタ
-    pub istensei: Option<bool>,  // 転生要素
-    pub istenni: Option<bool>,  // 転移要素
-    pub istt: Option<bool>,  // 転生または転移要素
-    pub stop: Option<u32>,  // 0:連載中含む, 1:長期連載停止除外, 2:長期連載停止のみ
+    pub userid: Option<u32>,  // ユーザーID指定
+    pub isr15: Option<bool>,  // R15作品
     pub isbl: Option<bool>,  // ボーイズラブ
     pub isgl: Option<bool>,  // ガールズラブ
     pub iszankoku: Option<bool>,  // 残酷な描写あり
-    pub isr15: Option<bool>,  // R15作品
-    pub ispickup: Option<bool>,  // ピックアップ作品
-    
-    // 除外フィルタ
-    pub nottensei: Option<bool>,  // 転生要素除外
-    pub nottenni: Option<bool>,  // 転移要素除外
+    pub istensei: Option<bool>,  // 転生要素
+    pub istenni: Option<bool>,  // 転移要素
+    pub istt: Option<bool>,  // 転生または転移要素
     pub notr15: Option<bool>,  // R15作品除外
     pub notbl: Option<bool>,  // ボーイズラブ除外
     pub notgl: Option<bool>,  // ガールズラブ除外
     pub notzankoku: Option<bool>,  // 残酷な描写除外
-    
-    // 文字数フィルタ（length指定時はminlen/maxlenは無視）
-    pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
+    pub nottensei: Option<bool>,  // 転生要素除外
+    pub nottenni: Option<bool>,  // 転移要素除外
     pub minlen: Option<u32>,  // 最小文字数
     pub maxlen: Option<u32>,  // 最大文字数
-    
-    // 会話率フィルタ
+    pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
     pub kaiwaritu: Option<String>,  // 会話率範囲（例: "10-50", "50-", "30"）
-    
-    // 挿絵数フィルタ
     pub sasie: Option<String>,  // 挿絵数範囲（例: "1-5", "1-", "3"）
-    
-    // 読了時間フィルタ（分単位、文字数フィルタと併用不可）
-    pub time: Option<String>,  // 読了時間範囲（例: "5-10", "60-", "30"）
     pub mintime: Option<u32>,  // 最小読了時間（分）
     pub maxtime: Option<u32>,  // 最大読了時間（分）
-    
-    // 最終更新日時フィルタ
+    pub time: Option<String>,  // 読了時間範囲（例: "5-10", "60-", "30"）
+    pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
     pub lastup: Option<String>,  // 最終掲載日（thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ）
-    pub lastupdate: Option<String>,  // 最終更新日（thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ）
-    
-    // 文体フィルタ
-    pub buntai: Option<String>,  // 文体指定（1,2,4,6）
-    
-    // タイプフィルタ
-    pub novel_type: Option<String>,  // "t": 短編, "r": 連載中, "er": 完結済連載
-    
-    // 出力制御
-    pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）
-    pub start: Option<u32>,  // 表示開始位置（1-2000）
-    pub order: Option<NarouOrder>,  // ソート順
-    pub of: Option<String>,  // 出力項目指定
     pub opt: Option<String>,  // オプション項目（例: "weekly"）
     
-    // 出力形式制御（注：パラメータは送信されるが、レスポンス処理は未実装）
-    pub libtype: Option<u8>,  // YAMLライブラリ選択（1:従来、2:新ライブラリ）※YAML出力未対応
-    pub updatetype: Option<u8>,  // Atomフィード日付項目（2:general_lastup）※Atom出力未対応
+    // 以下は別の場所で使用されるが、仕様書には明示されていないパラメータ
+    pub writer: Option<String>,  // 作者名検索
+    pub stop: Option<u32>,  // 0:連載中含む, 1:長期連載停止除外, 2:長期連載停止のみ
+    pub ispickup: Option<bool>,  // ピックアップ作品
+    pub lastupdate: Option<String>,  // 最終更新日
+    pub buntai: Option<String>,  // 文体指定（1,2,4,6）
+    pub novel_type: Option<String>,  // "t": 短編, "r": 連載中, "er": 完結済連載
     pub callback: Option<String>,  // JSONP用コールバック関数名 ※JSONP出力未対応
-    
-    // gzip圧縮
-    pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
 }

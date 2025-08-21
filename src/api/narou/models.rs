@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-/// なろう小説情報
+/// なろう小説情報（仕様書順）
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouNovel {
+    // allcountは別途管理
     pub title: Option<String>,
     pub ncode: Option<String>,
     pub userid: Option<u32>,
@@ -10,7 +11,7 @@ pub struct NarouNovel {
     pub story: Option<String>,
     pub biggenre: Option<u32>,
     pub genre: Option<u32>,
-    pub gensaku: Option<String>,  // 原作
+    pub gensaku: Option<String>,  // 原作（未使用）
     pub keyword: Option<String>,
     pub general_firstup: Option<String>,  // 初回掲載日
     pub general_lastup: Option<String>,  // 最終掲載日
@@ -26,7 +27,7 @@ pub struct NarouNovel {
     pub iszankoku: Option<u32>,  // 1:残酷な描写あり
     pub istensei: Option<u32>,  // 1:転生
     pub istenni: Option<u32>,  // 1:転移
-    pub pc_or_k: Option<u32>,  // 1:PC投稿, 2:ケータイ投稿
+    // pc_or_kは仕様書にないが保持
     pub global_point: Option<u32>,  // 総合評価ポイント
     pub daily_point: Option<u32>,  // 日間ポイント
     pub weekly_point: Option<u32>,  // 週間ポイント
@@ -42,18 +43,23 @@ pub struct NarouNovel {
     pub kaiwaritu: Option<u32>,  // 会話率
     pub novelupdated_at: Option<String>,  // 最終更新日時
     pub updated_at: Option<String>,  // システム更新日時
+    pub pc_or_k: Option<u32>,  // 1:PC投稿, 2:ケータイ投稿
 }
 
-/// なろうユーザー情報
+/// なろうユーザー情報（仕様書順）
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouUser {
+    // allcountは別途管理
     pub userid: Option<u32>,
     pub name: Option<String>,
     pub yomikata: Option<String>,  // 読み方
+    pub name1st: Option<String>,  // 頭文字
     pub novel_cnt: Option<u32>,  // 投稿作品数
     pub review_cnt: Option<u32>,  // レビュー投稿数
     pub novel_length: Option<u32>,  // 累計文字数
-    pub sumglobalpoint: Option<u32>,  // 総合評価ポイント合計
+    pub sum_global_point: Option<u32>,  // 総合評価ポイント合計
+    // 互換性のために旧名称も保持
+    pub sumglobalpoint: Option<u32>,  // 総合評価ポイント合計（旧名）
 }
 
 /// なろうランキング情報

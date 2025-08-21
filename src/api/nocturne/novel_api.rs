@@ -248,83 +248,56 @@ impl NocturneNovelApi {
     }
 }
 
-/// ノクターン小説検索パラメータ
+/// ノクターン小説検索パラメータ（仕様書順）
 #[derive(Debug, Clone, Default)]
 pub struct NocturneSearchParams {
-    // 基本検索
+    // 出力制御パラメータ
+    pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
+    // out は内部で自動設定
+    pub of: Option<String>,  // 出力項目指定
+    pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）
+    pub start: Option<u32>,  // 表示開始位置（1-2000）
+    pub order: Option<NocturneOrder>,  // ソート順
+    pub libtype: Option<u8>,  // YAMLライブラリ選択
+    pub updatetype: Option<u8>,  // Atomフィード日付項目
+    
+    // 条件抽出パラメータ
     pub word: Option<String>,  // 検索単語（スペース区切りでAND検索）
     pub notword: Option<String>,  // 除外単語（スペース区切り）
-    pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
-    pub xid: Option<String>,  // XID指定（-区切りで複数指定可）
-    
-    // 検索範囲指定（1で対象にする）
     pub title: Option<bool>,  // 1でタイトルをword/notwordの検索対象に含める
     pub ex: Option<bool>,  // あらすじを検索対象に
     pub keyword: Option<bool>,  // キーワードを検索対象に
     pub wname: Option<bool>,  // 作者名を検索対象に
-    
-    // ノクターン専用
-    pub nocgenre: Option<u32>,  // ノクターンジャンル指定（1-4）
+    pub nocgenre: Option<u32>,  // ノクターンジャンル指定
     pub notnocgenre: Option<u32>,  // ノクターンジャンル除外
-    
-    // 要素フィルタ
+    pub xid: Option<String>,  // XID指定（-区切りで複数指定可）
     pub isbl: Option<bool>,  // ボーイズラブ
     pub isgl: Option<bool>,  // ガールズラブ
     pub iszankoku: Option<bool>,  // 残酷な描写あり
     pub istensei: Option<bool>,  // 異世界転生
     pub istenni: Option<bool>,  // 異世界転移
     pub istt: Option<bool>,  // 転生または転移
-    
-    // 要素除外フィルタ
     pub notbl: Option<bool>,  // ボーイズラブ除外
     pub notgl: Option<bool>,  // ガールズラブ除外
     pub notzankoku: Option<bool>,  // 残酷な描写除外
     pub nottensei: Option<bool>,  // 異世界転生除外
     pub nottenni: Option<bool>,  // 異世界転移除外
-    
-    // 文字数フィルタ（length指定時はmin/maxは無視）
-    pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
     pub minlen: Option<u32>,  // 最小文字数
     pub maxlen: Option<u32>,  // 最大文字数
-    
-    // 読了時間フィルタ（文字数フィルタと併用不可）
-    pub time: Option<String>,  // 読了時間範囲（分単位）
+    pub length: Option<String>,  // 文字数範囲（例: "1000-5000", "1000-", "-5000"）
+    pub kaiwaritu: Option<String>,  // 会話率範囲（例: "10-50", "50-", "30"）
+    pub sasie: Option<String>,  // 挿絵数範囲（例: "1-5", "1-", "3"）
     pub mintime: Option<u32>,  // 最小読了時間（分）
     pub maxtime: Option<u32>,  // 最大読了時間（分）
+    pub time: Option<String>,  // 読了時間範囲（分単位）
+    pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
+    pub lastup: Option<String>,  // 最終掲載日
     
-    // 会話率フィルタ
-    pub kaiwaritu: Option<String>,  // 会話率範囲（例: "10-50", "50-", "30"）
-    
-    // 挿絵数フィルタ
-    pub sasie: Option<String>,  // 挿絵数範囲（例: "1-5", "1-", "3"）
-    
-    // 状態フィルタ
-    pub stop: Option<u32>,  // 1:長期連載停止除外, 2:長期連載停止のみ
-    
-    // タイプフィルタ
-    pub novel_type: Option<String>,  // "t": 短編, "r": 連載中, "er": 完結済連載, "re": 全連載, "ter": 短編+完結済
-    
-    // 文体フィルタ
+    // 以下は仕様書に明記されていないが実装されている
+    pub stop: Option<u32>,  // 0:連載中含む, 1:長期連載停止除外, 2:長期連載停止のみ
+    pub novel_type: Option<String>,  // "t": 短編, "r": 連載中, "er": 完結済連載
     pub buntai: Option<String>,  // 文体指定（1,2,4,6）
-    
-    // 日付フィルタ
-    pub lastup: Option<String>,  // 最終掲載日（thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ）
-    pub lastupdate: Option<String>,  // 最終更新日（thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ）
-    
-    // ピックアップ
-    pub ispickup: Option<bool>,  // ピックアップ作品のみ
-    
-    // 出力制御
-    pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）
-    pub start: Option<u32>,  // 表示開始位置（1-2000）
-    pub order: Option<NocturneOrder>,  // ソート順
-    pub of: Option<String>,  // 出力項目指定
-    
-    // 出力形式制御（注：パラメータは送信されるが、レスポンス処理は未実装）
-    pub libtype: Option<u8>,  // YAMLライブラリ選択（1:従来、2:新ライブラリ）※YAML出力未対応
-    pub updatetype: Option<u8>,  // Atomフィード日付項目（2:general_lastup）※Atom出力未対応
-    pub callback: Option<String>,  // JSONP用コールバック関数名 ※JSONP出力未対応
-    
-    // gzip圧縮
-    pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
+    pub lastupdate: Option<String>,  // 最終更新日
+    pub ispickup: Option<bool>,  // ピックアップ作品
+    pub callback: Option<String>,  // JSONP用コールバック関数名
 }
