@@ -72,8 +72,9 @@ pub struct NarouRankinResponse {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouRankinRecord {
-    pub date: String,
-    pub rank: u32,
+    pub pt: u32,    // ポイント
+    pub rank: u32,   // 順位
+    pub rtype: String,  // ランキングタイプ（例: "20130501-d"）
 }
 
 /// なろうAPIレスポンス（配列形式）
