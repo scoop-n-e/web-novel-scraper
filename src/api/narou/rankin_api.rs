@@ -41,9 +41,9 @@ impl NarouRankinApi {
             query.insert("callback".to_string(), callback);
         }
         
-        // gzip圧縮対応（殿堂入りAPIではgzipは動作しない可能性がある）
+        // gzip圧縮対応
         if let Some(level) = gzip {
-            if (1..=5).contains(&level) && level != 3 {  // レベル3は避ける
+            if (1..=5).contains(&level) {
                 query.insert("gzip".to_string(), level.to_string());
             }
         }

@@ -239,22 +239,22 @@ impl NarouNovelApi {
     }
 }
 
-/// 小説検索パラメータ
+/// 小説検索パラメータ（仕様書準拠）
 #[derive(Debug, Clone, Default)]
 pub struct NovelSearchParams {
-    // 出力制御パラメータ（仕様書順）
+    // 出力制御GETパラメータ（仕様書順）
     pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
-    // out は内部で自動設定
+    // out は内部で自動設定 (json)
     pub of: Option<String>,  // 出力項目指定
     pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）
     pub start: Option<u32>,  // 表示開始位置（1-2000）
     pub order: Option<NarouOrder>,  // ソート順
-    pub libtype: Option<u8>,  // YAMLライブラリ選択（1:従来、2:新ライブラリ）※YAML出力未対応
-    pub updatetype: Option<u8>,  // Atomフィード日付項目（2:general_lastup）※Atom出力未対応
+    pub libtype: Option<u8>,  // YAMLライブラリ選択（1:従来、2:新ライブラリ）
+    pub updatetype: Option<u8>,  // Atomフィード日付項目（2:general_lastup）
     
     // 条件抽出パラメータ（仕様書順）
     pub word: Option<String>,  // 検索単語（スペース区切りでAND検索）
-    pub notword: Option<String>,  // 除外単語（スペース区切り）
+    pub notword: Option<String>,  // 除妖語（スペース区切り）
     pub title: Option<bool>,  // 1でタイトルをword/notwordの検索対象に含める
     pub ex: Option<bool>,  // あらすじを検索対象に
     pub keyword: Option<bool>,  // キーワードを検索対象に
@@ -286,15 +286,15 @@ pub struct NovelSearchParams {
     pub maxtime: Option<u32>,  // 最大読了時間（分）
     pub time: Option<String>,  // 読了時間範囲（例: "5-10", "60-", "30"）
     pub ncode: Option<String>,  // Nコード指定（-区切りで複数指定可）
-    pub lastup: Option<String>,  // 最終掲載日（thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ）
-    pub opt: Option<String>,  // オプション項目（例: "weekly"）
+    pub novel_type: Option<String>,  // 作品タイプ "t": 短編, "r": 連載中, "er": 完結済連載, "re": すべての連載, "ter": 短編と完結済
+    pub buntai: Option<String>,  // 文体指定（1,2,4,6 またはハイフン区切り）
+    pub stop: Option<u32>,  // 長期連載停止作品 0:含む, 1:除外, 2:長期連載停止のみ
+    pub ispickup: Option<bool>,  // ピックアップ作品 1:ピックアップのみ
+    pub lastup: Option<String>,  // 最終掲載日 (thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ範囲)
+    pub lastupdate: Option<String>,  // 最終更新日 (thisweek, lastweek, sevenday, thismonth, lastmonth, タイムスタンプ範囲)
+    pub opt: Option<String>,  // オプション項目（例: "weekly", "daily", "weekly-count"等）
+    pub callback: Option<String>,  // JSONP用コールバック関数名
     
-    // 以下は別の場所で使用されるが、仕様書には明示されていないパラメータ
-    pub writer: Option<String>,  // 作者名検索
-    pub stop: Option<u32>,  // 0:連載中含む, 1:長期連載停止除外, 2:長期連載停止のみ
-    pub ispickup: Option<bool>,  // ピックアップ作品
-    pub lastupdate: Option<String>,  // 最終更新日
-    pub buntai: Option<String>,  // 文体指定（1,2,4,6）
-    pub novel_type: Option<String>,  // "t": 短編, "r": 連載中, "er": 完結済連載
-    pub callback: Option<String>,  // JSONP用コールバック関数名 ※JSONP出力未対応
+    // 以下は実装上必要だがパラメータリストには明記されていない
+    pub writer: Option<String>,  // 作者名検索（出力フィールドには存在）
 }

@@ -106,29 +106,27 @@ impl NarouUserApi {
     }
 }
 
-/// ユーザー検索パラメータ（仕様書順）
+/// ユーザー検索パラメータ（仕様書準拠）
 #[derive(Debug, Clone, Default)]
 pub struct UserSearchParams {
-    // 出力制御パラメータ
+    // 出力制御GETパラメータ（仕様書順）
     pub gzip: Option<u8>,  // gzip圧縮レベル（1-5）
-    // out は内部で自動設定
+    // out は内部で自動設定 (json)
     pub of: Option<String>,  // 出力項目指定（u-n-y-nc-rc-nl-sg）
     pub limit: Option<u32>,  // 最大出力数（1-500、デフォルト20）
     pub start: Option<u32>,  // 表示開始位置（1-2000）
-    pub order: Option<String>,  // ソート順（userid, name, novel, review, sumglobalpoint）
-    pub libtype: Option<u8>,  // YAMLライブラリ選択
+    pub order: Option<String>,  // ソート順（new, userid, name, novelcnt, reviewcnt, novellength, sumglobalpoint, old）
+    pub libtype: Option<u8>,  // YAMLライブラリ選択（1:従来、2:新ライブラリ）
+    pub callback: Option<String>,  // JSONP用コールバック関数名
     
-    // 条件抽出パラメータ
+    // 条件抽出パラメータ（仕様書順）
     pub word: Option<String>,  // 検索単語
     pub notword: Option<String>,  // 除外単語
-    pub userid: Option<u32>,  // ユーザーID指定
-    pub name1st: Option<String>,  // 頭文字指定
+    pub userid: Option<u32>,  // ユーザーID指定（-区切りで複数指定可）
+    pub name: Option<String>,  // ユーザー名指定
+    pub name1st: Option<String>,  // 頭文字指定（ひらがな・カタカナ・英数字・その他）
     pub minnovel: Option<u32>,  // 作品投稿数最小
     pub maxnovel: Option<u32>,  // 作品投稿数最大
     pub minreview: Option<u32>,  // レビュー投稿数最小
     pub maxreview: Option<u32>,  // レビュー投稿数最大
-    
-    // 以下はAPIに送信されるが仕様書に明記されていない
-    pub name: Option<String>,  // ユーザー名指定
-    pub callback: Option<String>,  // JSONP用コールバック関数名
 }

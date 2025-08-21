@@ -1,13 +1,15 @@
 use serde::{Deserialize, Serialize};
 
-/// ノクターン（R18）小説情報
+/// ノクターン（R18）小説情報（仕様書順）
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NocturneNovel {
-    // 基本情報（なろうと共通のフィールド）
+    // allcountは別途管理
     pub title: Option<String>,
     pub ncode: Option<String>,
     pub writer: Option<String>,
     pub story: Option<String>,
+    pub nocgenre: Option<u32>,  // ノクターンジャンル
+    pub gensaku: Option<String>,  // 原作（未使用）
     pub keyword: Option<String>,
     pub general_firstup: Option<String>,  // 初回掲載日
     pub general_lastup: Option<String>,  // 最終掲載日
@@ -17,15 +19,11 @@ pub struct NocturneNovel {
     pub length: Option<u32>,  // 文字数
     pub time: Option<u32>,  // 読了時間（分）
     pub isstop: Option<u32>,  // 1:長期連載停止中
-    pub pc_or_k: Option<u32>,  // 1:PC投稿, 2:ケータイ投稿
-    
-    // ノクターン専用フィールド
-    pub nocgenre: Option<u32>,  // ノクターンジャンル
-    pub xid: Option<String>,  // ノクターンID（XID）
-    pub novel_no: Option<u32>,  // 小説番号
-    pub nocturne: Option<u32>,  // 1:ノクターン, 2:ムーンライト, 3:ミッドナイト
-    
-    // 評価・統計情報
+    pub isbl: Option<u32>,  // 1:ボーイズラブ
+    pub isgl: Option<u32>,  // 1:ガールズラブ
+    pub iszankoku: Option<u32>,  // 1:残酷な描写あり
+    pub istensei: Option<u32>,  // 1:転生
+    pub istenni: Option<u32>,  // 1:転移
     pub global_point: Option<u32>,  // 総合評価ポイント
     pub daily_point: Option<u32>,  // 日間ポイント
     pub weekly_point: Option<u32>,  // 週間ポイント
@@ -41,6 +39,12 @@ pub struct NocturneNovel {
     pub kaiwaritu: Option<u32>,  // 会話率
     pub novelupdated_at: Option<String>,  // 最終更新日時
     pub updated_at: Option<String>,  // システム更新日時
+    
+    // ノクターン専用フィールド（仕様書にないが実装上必要）
+    pub xid: Option<String>,  // ノクターンID（XID）
+    pub novel_no: Option<u32>,  // 小説番号
+    pub nocturne: Option<u32>,  // 1:ノクターン, 2:ムーンライト, 3:ミッドナイト
+    pub pc_or_k: Option<u32>,  // 1:PC投稿, 2:ケータイ投稿
 }
 
 /// ノクターンAPIレスポンス
