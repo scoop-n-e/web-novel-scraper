@@ -2,6 +2,8 @@ use anyhow::{Context, Result};
 use reqwest::Client;
 use serde::de::DeserializeOwned;
 use std::collections::HashMap;
+use std::io::Read;
+use flate2::read::GzDecoder;
 
 /// なろうAPIクライアント（基底クラス）
 pub struct NarouApiClient {
@@ -62,9 +64,45 @@ impl NarouApiClient {
         if let Some(level) = gzip_level {
             if (1..=5).contains(&level) {
                 params.insert("gzip".to_string(), level.to_string());
+                
+                // gzipパラメータが指定された場合、gzipデータを取得して解凍
+                let response = self.client.get(url)
+                    .query(&params)
+                    .send()
+                    .await
+                    .with_context(|| format!("Failed to send request to {}", url))?;
+                
+                if !response.status().is_success() {
+                    anyhow::bail!("API request failed with status: {}", response.status());
+                }
+                
+                // バイナリデータとして取得
+                let bytes = response.bytes().await?;
+                
+                // gzipデータを解凍
+                let mut decoder = GzDecoder::new(&bytes[..]);
+                let mut decompressed = String::new();
+                decoder.read_to_string(&mut decompressed)
+                    .with_context(|| "Failed to decompress gzip data")?;
+                
+                // JSONパース
+                let mut results: Vec<serde_json::Value> = serde_json::from_str(&decompressed)
+                    .with_context(|| format!("Failed to parse API response: {}", &decompressed[..decompressed.len().min(500)]))?;
+                
+                // 最初の要素（allcount）を除く
+                if !results.is_empty() {
+                    results.remove(0);
+                }
+                
+                // 各要素をデシリアライズ
+                return results.into_iter()
+                    .map(|v| serde_json::from_value(v))
+                    .collect::<Result<Vec<T>, _>>()
+                    .with_context(|| "Failed to deserialize API response");
             }
         }
         
+        // gzipが指定されていない場合は通常のリクエスト
         self.request(url, params).await
     }
     

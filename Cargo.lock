@@ -2968,6 +2968,7 @@ dependencies = [
  "chrono",
  "clap",
  "fake-useragent",
+ "flate2",
  "once_cell",
  "rand 0.8.5",
  "regex",

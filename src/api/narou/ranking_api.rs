@@ -17,6 +17,7 @@ impl NarouRankingApi {
     }
 
     /// ランキングを取得
+    /// 注意: 週間ランキングは火曜日のみ、月間・四半期は1日のみ取得可能
     pub async fn get_ranking(&self, ranking_type: RankingType, date: Option<String>, gzip: Option<u8>) -> Result<Vec<NarouRankingItem>> {
         self.get_ranking_with_options(ranking_type, date, gzip, None, None).await
     }
@@ -96,25 +97,17 @@ impl NarouRankingApi {
         self.get_ranking(RankingType::Quarter, date, Some(gzip)).await
     }
 
-    /// 特定日付の年間ランキング
-    pub async fn get_yearly_ranking(&self, date: Option<String>) -> Result<Vec<NarouRankingItem>> {
-        self.get_ranking(RankingType::Yearly, date, None).await
-    }
-    
-    /// 特定日付の年間ランキング（gzip圧縮あり）
-    pub async fn get_yearly_ranking_with_gzip(&self, date: Option<String>, gzip: u8) -> Result<Vec<NarouRankingItem>> {
-        self.get_ranking(RankingType::Yearly, date, Some(gzip)).await
-    }
+    // 年間ランキングは存在しない（API仕様上、日間、週間、月間、四半期のみ）
 }
 
 /// ランキングタイプ
 #[derive(Debug, Clone, PartialEq)]
 pub enum RankingType {
     Daily,  // 日間
-    Weekly,  // 週間
-    Monthly,  // 月間
-    Quarter,  // 四半期
-    Yearly,  // 年間
+    Weekly,  // 週間（火曜日のみ）
+    Monthly,  // 月間（1日のみ）  
+    Quarter,  // 四半期（1日のみ）
+    // 年間ランキングは存在しない
 }
 
 impl RankingType {
@@ -124,7 +117,6 @@ impl RankingType {
             RankingType::Weekly => "w",
             RankingType::Monthly => "m",
             RankingType::Quarter => "q",
-            RankingType::Yearly => "y",
         }
     }
 }
