@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NocturneNovel {
     // 基本情報（なろうと共通のフィールド）
-    pub title: String,
-    pub ncode: String,
-    pub writer: String,
+    pub title: Option<String>,
+    pub ncode: Option<String>,
+    pub writer: Option<String>,
     pub story: Option<String>,
     pub keyword: Option<String>,
     pub general_firstup: Option<String>,  // 初回掲載日
