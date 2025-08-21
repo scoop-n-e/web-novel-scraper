@@ -3,10 +3,10 @@ use serde::{Deserialize, Serialize};
 /// なろう小説情報
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouNovel {
-    pub title: String,
-    pub ncode: String,
-    pub userid: u32,
-    pub writer: String,
+    pub title: Option<String>,
+    pub ncode: Option<String>,
+    pub userid: Option<u32>,
+    pub writer: Option<String>,
     pub story: Option<String>,
     pub biggenre: Option<u32>,
     pub genre: Option<u32>,
@@ -47,8 +47,8 @@ pub struct NarouNovel {
 /// なろうユーザー情報
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouUser {
-    pub userid: u32,
-    pub name: String,
+    pub userid: Option<u32>,
+    pub name: Option<String>,
     pub yomikata: Option<String>,  // 読み方
     pub novel_cnt: Option<u32>,  // 投稿作品数
     pub review_cnt: Option<u32>,  // レビュー投稿数
