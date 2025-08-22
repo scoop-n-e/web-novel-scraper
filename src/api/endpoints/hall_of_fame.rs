@@ -4,9 +4,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HallOfFameRequest {
-    pub ncode: String,
     pub gzip: Option<u8>,
     pub out: Option<String>,
+    pub ncode: String,
     pub libtype: Option<u8>,
     pub callback: Option<String>,
 }
@@ -14,9 +14,9 @@ pub struct HallOfFameRequest {
 impl HallOfFameRequest {
     pub fn new(ncode: String) -> Self {
         Self {
-            ncode,
             gzip: None,
             out: Some("json".to_string()),
+            ncode,
             libtype: None,
             callback: None,
         }
@@ -27,14 +27,13 @@ impl crate::api::common::request::ApiRequest for HallOfFameRequest {
     fn to_query_params(&self) -> Vec<(String, String)> {
         let mut params = Vec::new();
         
-        params.push(("ncode".to_string(), self.ncode.clone()));
-        
         if let Some(ref value) = self.gzip {
             params.push(("gzip".to_string(), value.to_string()));
         }
         if let Some(ref value) = self.out {
             params.push(("out".to_string(), value.clone()));
         }
+        params.push(("ncode".to_string(), self.ncode.clone()));
         if let Some(ref value) = self.libtype {
             params.push(("libtype".to_string(), value.to_string()));
         }

@@ -49,11 +49,12 @@ impl ApiRequest for UserRequest {
     fn to_query_params(&self) -> Vec<(String, String)> {
         let mut params = Vec::new();
         
+        if let Some(gzip) = self.gzip { params.push(("gzip".to_string(), gzip.to_string())); }
+        if let Some(ref out) = self.out { params.push(("out".to_string(), out.clone())); }
         if let Some(ref value) = self.of { params.push(("of".to_string(), value.clone())); }
         if let Some(ref value) = self.lim { params.push(("lim".to_string(), value.to_string())); }
         if let Some(ref value) = self.st { params.push(("st".to_string(), value.to_string())); }
         if let Some(ref value) = self.order { params.push(("order".to_string(), value.clone())); }
-        if let Some(ref value) = self.libtype { params.push(("libtype".to_string(), value.to_string())); }
         if let Some(ref value) = self.word { params.push(("word".to_string(), value.clone())); }
         if let Some(ref value) = self.notword { params.push(("notword".to_string(), value.clone())); }
         if let Some(ref value) = self.userid { params.push(("userid".to_string(), value.to_string())); }
@@ -62,16 +63,8 @@ impl ApiRequest for UserRequest {
         if let Some(ref value) = self.maxnovel { params.push(("maxnovel".to_string(), value.to_string())); }
         if let Some(ref value) = self.minreview { params.push(("minreview".to_string(), value.to_string())); }
         if let Some(ref value) = self.maxreview { params.push(("maxreview".to_string(), value.to_string())); }
-        
-        if let Some(gzip) = self.gzip {
-            params.push(("gzip".to_string(), gzip.to_string()));
-        }
-        if let Some(ref out) = self.out {
-            params.push(("out".to_string(), out.clone()));
-        }
-        if let Some(ref callback) = self.callback {
-            params.push(("callback".to_string(), callback.clone()));
-        }
+        if let Some(ref value) = self.libtype { params.push(("libtype".to_string(), value.to_string())); }
+        if let Some(ref callback) = self.callback { params.push(("callback".to_string(), callback.clone())); }
         
         params
     }

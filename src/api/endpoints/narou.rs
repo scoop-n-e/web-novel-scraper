@@ -10,7 +10,6 @@ pub struct NarouRequest {
     pub lim: Option<u32>,
     pub st: Option<u32>,
     pub order: Option<String>,
-    pub libtype: Option<u8>,
     pub word: Option<String>,
     pub notword: Option<String>,
     pub title: Option<u8>,
@@ -50,6 +49,7 @@ pub struct NarouRequest {
     pub lastup: Option<String>,
     pub lastupdate: Option<String>,
     pub ispickup: Option<u8>,
+    pub libtype: Option<u8>,
     pub opt: Option<String>,
     pub callback: Option<String>,
     pub updatetype: Option<u8>,
@@ -64,7 +64,6 @@ impl NarouRequest {
             lim: None,
             st: None,
             order: None,
-            libtype: None,
             word: None,
             notword: None,
             title: None,
@@ -104,6 +103,7 @@ impl NarouRequest {
             lastup: None,
             lastupdate: None,
             ispickup: None,
+            libtype: None,
             opt: None,
             callback: None,
             updatetype: None,
@@ -115,11 +115,12 @@ impl crate::api::common::request::ApiRequest for NarouRequest {
     fn to_query_params(&self) -> Vec<(String, String)> {
         let mut params = Vec::new();
         
+        if let Some(gzip) = self.gzip { params.push(("gzip".to_string(), gzip.to_string())); }
+        if let Some(ref out) = self.out { params.push(("out".to_string(), out.clone())); }
         if let Some(ref value) = self.of { params.push(("of".to_string(), value.clone())); }
         if let Some(ref value) = self.lim { params.push(("lim".to_string(), value.to_string())); }
         if let Some(ref value) = self.st { params.push(("st".to_string(), value.to_string())); }
         if let Some(ref value) = self.order { params.push(("order".to_string(), value.clone())); }
-        if let Some(ref value) = self.libtype { params.push(("libtype".to_string(), value.to_string())); }
         if let Some(ref value) = self.word { params.push(("word".to_string(), value.clone())); }
         if let Some(ref value) = self.notword { params.push(("notword".to_string(), value.clone())); }
         if let Some(ref value) = self.title { params.push(("title".to_string(), value.to_string())); }
@@ -159,18 +160,10 @@ impl crate::api::common::request::ApiRequest for NarouRequest {
         if let Some(ref value) = self.lastup { params.push(("lastup".to_string(), value.clone())); }
         if let Some(ref value) = self.lastupdate { params.push(("lastupdate".to_string(), value.clone())); }
         if let Some(ref value) = self.ispickup { params.push(("ispickup".to_string(), value.to_string())); }
+        if let Some(ref value) = self.libtype { params.push(("libtype".to_string(), value.to_string())); }
         if let Some(ref value) = self.opt { params.push(("opt".to_string(), value.clone())); }
+        if let Some(ref callback) = self.callback { params.push(("callback".to_string(), callback.clone())); }
         if let Some(ref value) = self.updatetype { params.push(("updatetype".to_string(), value.to_string())); }
-        
-        if let Some(gzip) = self.gzip {
-            params.push(("gzip".to_string(), gzip.to_string()));
-        }
-        if let Some(ref out) = self.out {
-            params.push(("out".to_string(), out.clone()));
-        }
-        if let Some(ref callback) = self.callback {
-            params.push(("callback".to_string(), callback.clone()));
-        }
         
         params
     }
