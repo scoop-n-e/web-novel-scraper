@@ -30,3 +30,4 @@ serde_yaml = "0.9"
 chrono = { version = "0.4", features = ["serde"] }
 flate2 = "1.0"
 scraper = "0.17"
+async-trait = "0.1"

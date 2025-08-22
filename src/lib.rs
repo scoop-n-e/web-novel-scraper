@@ -6,6 +6,7 @@ pub mod api_user;
 pub mod api_hall_of_fame;
 pub mod api_ranking;
 pub mod api_nocturne;
+pub mod api;
 
 pub use fetcher::{FetchOptions, HtmlFetcher, UserAgentMode, RequestDelayConfig};
 pub use rating_scraper::{NarouRatingScraper, RatingEntry};
