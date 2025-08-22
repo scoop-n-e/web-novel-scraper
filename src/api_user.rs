@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use serde_json;
+use flate2::read::GzDecoder;
+use std::io::Read;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouUserApiRequest {
@@ -117,25 +119,45 @@ impl NarouUserApiClient {
             .send()
             .await?;
 
-        let text = response.text().await?;
+        let body_bytes = response.bytes().await?;
+        
+        let text = if params.gzip.is_some() {
+            let mut decoder = GzDecoder::new(&body_bytes[..]);
+            let mut decompressed = String::new();
+            decoder.read_to_string(&mut decompressed)?;
+            decompressed
+        } else {
+            String::from_utf8(body_bytes.to_vec())?
+        };
         
         let out_format = params.out.as_deref().unwrap_or("yaml");
         
         match out_format {
             "json" => {
                 let data: serde_json::Value = serde_json::from_str(&text)?;
-                let users = Self::parse_json_response(data)?;
+                let users = Self::parse_json_response(data, &params.of)?;
                 Ok(users)
             }
-            "yaml" | _ => {
+            "yaml" => {
                 let data: serde_yaml::Value = serde_yaml::from_str(&text)?;
-                let users = Self::parse_yaml_response(data)?;
+                let users = Self::parse_yaml_response(data, &params.of)?;
+                Ok(users)
+            }
+            "php" => {
+                return Err("PHP serialize format is not implemented".into());
+            }
+            "jsonp" => {
+                return Err("JSONP format is not implemented".into());
+            }
+            _ => {
+                let data: serde_yaml::Value = serde_yaml::from_str(&text)?;
+                let users = Self::parse_yaml_response(data, &params.of)?;
                 Ok(users)
             }
         }
     }
 
-    fn parse_json_response(data: serde_json::Value) -> Result<NarouUserApiResponse, Box<dyn std::error::Error>> {
+    fn parse_json_response(data: serde_json::Value, of_param: &Option<String>) -> Result<NarouUserApiResponse, Box<dyn std::error::Error>> {
         if let Some(arr) = data.as_array() {
             if arr.is_empty() {
                 return Ok(NarouUserApiResponse {
@@ -150,7 +172,7 @@ impl NarouUserApiClient {
 
             let users: Result<Vec<_>, _> = arr[1..]
                 .iter()
-                .map(|v| serde_json::from_value::<NarouUserInfo>(v.clone()))
+                .map(|v| Self::parse_user_with_of(v.clone(), of_param))
                 .collect();
 
             Ok(NarouUserApiResponse {
@@ -162,7 +184,7 @@ impl NarouUserApiClient {
         }
     }
 
-    fn parse_yaml_response(data: serde_yaml::Value) -> Result<NarouUserApiResponse, Box<dyn std::error::Error>> {
+    fn parse_yaml_response(data: serde_yaml::Value, of_param: &Option<String>) -> Result<NarouUserApiResponse, Box<dyn std::error::Error>> {
         if let Some(seq) = data.as_sequence() {
             if seq.is_empty() {
                 return Ok(NarouUserApiResponse {
@@ -177,7 +199,10 @@ impl NarouUserApiClient {
 
             let users: Result<Vec<_>, _> = seq[1..]
                 .iter()
-                .map(|v| serde_yaml::from_value::<NarouUserInfo>(v.clone()))
+                .map(|v| {
+                    let json_value = serde_json::to_value(v)?;
+                    Self::parse_user_with_of(json_value, of_param)
+                })
                 .collect();
 
             Ok(NarouUserApiResponse {
@@ -187,6 +212,42 @@ impl NarouUserApiClient {
         } else {
             Err("Invalid response format".into())
         }
+    }
+
+    fn parse_user_with_of(value: serde_json::Value, of_param: &Option<String>) -> Result<NarouUserInfo, Box<dyn std::error::Error>> {
+        if of_param.is_none() {
+            return Ok(serde_json::from_value::<NarouUserInfo>(value)?);
+        }
+
+        let of_fields = of_param.as_ref().unwrap();
+        let fields: Vec<&str> = of_fields.split('-').collect();
+        
+        let mut user = NarouUserInfo {
+            userid: None,
+            name: None,
+            yomikata: None,
+            name1st: None,
+            novel_cnt: None,
+            review_cnt: None,
+            novel_length: None,
+            sum_global_point: None,
+        };
+
+        for field in fields {
+            match field {
+                "u" => user.userid = value["userid"].as_u64().map(|n| n as u32),
+                "n" => user.name = value["name"].as_str().map(|s| s.to_string()),
+                "y" => user.yomikata = value["yomikata"].as_str().map(|s| s.to_string()),
+                "n1" => user.name1st = value["name1st"].as_str().map(|s| s.to_string()),
+                "nc" => user.novel_cnt = value["novel_cnt"].as_u64().map(|n| n as u32),
+                "rc" => user.review_cnt = value["review_cnt"].as_u64().map(|n| n as u32),
+                "nl" => user.novel_length = value["novel_length"].as_u64(),
+                "sg" => user.sum_global_point = value["sum_global_point"].as_u64(),
+                _ => {}
+            }
+        }
+
+        Ok(user)
     }
 }
 

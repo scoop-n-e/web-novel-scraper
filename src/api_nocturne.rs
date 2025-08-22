@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use serde_json;
+use flate2::read::GzDecoder;
+use std::io::Read;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NocturneNovelApiRequest {
@@ -261,25 +263,48 @@ impl NocturneNovelApiClient {
             .send()
             .await?;
 
-        let text = response.text().await?;
+        let body_bytes = response.bytes().await?;
+        
+        let text = if params.gzip.is_some() {
+            let mut decoder = GzDecoder::new(&body_bytes[..]);
+            let mut decompressed = String::new();
+            decoder.read_to_string(&mut decompressed)?;
+            decompressed
+        } else {
+            String::from_utf8(body_bytes.to_vec())?
+        };
         
         let out_format = params.out.as_deref().unwrap_or("yaml");
         
         match out_format {
             "json" => {
                 let data: serde_json::Value = serde_json::from_str(&text)?;
-                let novels = Self::parse_json_response(data)?;
+                let novels = Self::parse_json_response(data, &params.of)?;
                 Ok(novels)
             }
-            "yaml" | _ => {
+            "yaml" => {
                 let data: serde_yaml::Value = serde_yaml::from_str(&text)?;
-                let novels = Self::parse_yaml_response(data)?;
+                let novels = Self::parse_yaml_response(data, &params.of)?;
+                Ok(novels)
+            }
+            "php" => {
+                return Err("PHP serialize format is not implemented".into());
+            }
+            "atom" => {
+                return Err("Atom feed format is not implemented".into());
+            }
+            "jsonp" => {
+                return Err("JSONP format is not implemented".into());
+            }
+            _ => {
+                let data: serde_yaml::Value = serde_yaml::from_str(&text)?;
+                let novels = Self::parse_yaml_response(data, &params.of)?;
                 Ok(novels)
             }
         }
     }
 
-    fn parse_json_response(data: serde_json::Value) -> Result<NocturneNovelApiResponse, Box<dyn std::error::Error>> {
+    fn parse_json_response(data: serde_json::Value, of_param: &Option<String>) -> Result<NocturneNovelApiResponse, Box<dyn std::error::Error>> {
         if let Some(arr) = data.as_array() {
             if arr.is_empty() {
                 return Ok(NocturneNovelApiResponse {
@@ -294,7 +319,7 @@ impl NocturneNovelApiClient {
 
             let novels: Result<Vec<_>, _> = arr[1..]
                 .iter()
-                .map(|v| serde_json::from_value::<NocturneNovelInfo>(v.clone()))
+                .map(|v| Self::parse_novel_with_of(v.clone(), of_param))
                 .collect();
 
             Ok(NocturneNovelApiResponse {
@@ -306,7 +331,7 @@ impl NocturneNovelApiClient {
         }
     }
 
-    fn parse_yaml_response(data: serde_yaml::Value) -> Result<NocturneNovelApiResponse, Box<dyn std::error::Error>> {
+    fn parse_yaml_response(data: serde_yaml::Value, of_param: &Option<String>) -> Result<NocturneNovelApiResponse, Box<dyn std::error::Error>> {
         if let Some(seq) = data.as_sequence() {
             if seq.is_empty() {
                 return Ok(NocturneNovelApiResponse {
@@ -321,7 +346,10 @@ impl NocturneNovelApiClient {
 
             let novels: Result<Vec<_>, _> = seq[1..]
                 .iter()
-                .map(|v| serde_yaml::from_value::<NocturneNovelInfo>(v.clone()))
+                .map(|v| {
+                    let json_value = serde_json::to_value(v)?;
+                    Self::parse_novel_with_of(json_value, of_param)
+                })
                 .collect();
 
             Ok(NocturneNovelApiResponse {
@@ -331,6 +359,101 @@ impl NocturneNovelApiClient {
         } else {
             Err("Invalid response format".into())
         }
+    }
+
+    fn parse_novel_with_of(value: serde_json::Value, of_param: &Option<String>) -> Result<NocturneNovelInfo, Box<dyn std::error::Error>> {
+        if of_param.is_none() {
+            return Ok(serde_json::from_value::<NocturneNovelInfo>(value)?);
+        }
+
+        let of_fields = of_param.as_ref().unwrap();
+        let fields: Vec<&str> = of_fields.split('-').collect();
+        
+        let mut novel = NocturneNovelInfo {
+            title: None,
+            ncode: None,
+            writer: None,
+            story: None,
+            nocgenre: None,
+            gensaku: None,
+            keyword: None,
+            general_firstup: None,
+            general_lastup: None,
+            novel_type: None,
+            end: None,
+            general_all_no: None,
+            length: None,
+            time: None,
+            isstop: None,
+            isbl: None,
+            isgl: None,
+            iszankoku: None,
+            istensei: None,
+            istenni: None,
+            global_point: None,
+            daily_point: None,
+            weekly_point: None,
+            monthly_point: None,
+            quarter_point: None,
+            yearly_point: None,
+            fav_novel_cnt: None,
+            impression_cnt: None,
+            review_cnt: None,
+            all_point: None,
+            all_hyoka_cnt: None,
+            sasie_cnt: None,
+            kaiwaritu: None,
+            novelupdated_at: None,
+            updated_at: None,
+            weekly_unique: None,
+        };
+
+        for field in fields {
+            match field {
+                "t" => novel.title = value["title"].as_str().map(|s| s.to_string()),
+                "n" => novel.ncode = value["ncode"].as_str().map(|s| s.to_string()),
+                "w" => novel.writer = value["writer"].as_str().map(|s| s.to_string()),
+                "s" => novel.story = value["story"].as_str().map(|s| s.to_string()),
+                "ng" => novel.nocgenre = value["nocgenre"].as_u64().map(|n| n as u8),
+                "k" => novel.keyword = value["keyword"].as_str().map(|s| s.to_string()),
+                "gf" => novel.general_firstup = value["general_firstup"].as_str().map(|s| s.to_string()),
+                "gl" => novel.general_lastup = value["general_lastup"].as_str().map(|s| s.to_string()),
+                "nt" => novel.novel_type = value["noveltype"].as_u64().map(|n| n as u8)
+                    .or_else(|| value["novel_type"].as_u64().map(|n| n as u8)),
+                "e" => novel.end = value["end"].as_u64().map(|n| n as u8),
+                "ga" => novel.general_all_no = value["general_all_no"].as_u64().map(|n| n as u32),
+                "l" => novel.length = value["length"].as_u64().map(|n| n as u32),
+                "ti" => novel.time = value["time"].as_u64().map(|n| n as u32),
+                "i" => novel.isstop = value["isstop"].as_u64().map(|n| n as u8),
+                "ibl" => novel.isbl = value["isbl"].as_u64().map(|n| n as u8),
+                "igl" => novel.isgl = value["isgl"].as_u64().map(|n| n as u8),
+                "izk" => novel.iszankoku = value["iszankoku"].as_u64().map(|n| n as u8),
+                "its" => novel.istensei = value["istensei"].as_u64().map(|n| n as u8),
+                "iti" => novel.istenni = value["istenni"].as_u64().map(|n| n as u8),
+                "gp" => novel.global_point = value["global_point"].as_u64().map(|n| n as u32),
+                "dp" => novel.daily_point = value["daily_point"].as_u64().map(|n| n as u32),
+                "wp" => novel.weekly_point = value["weekly_point"].as_u64().map(|n| n as u32),
+                "mp" => novel.monthly_point = value["monthly_point"].as_u64().map(|n| n as u32),
+                "qp" => novel.quarter_point = value["quarter_point"].as_u64().map(|n| n as u32),
+                "yp" => novel.yearly_point = value["yearly_point"].as_u64().map(|n| n as u32),
+                "f" => novel.fav_novel_cnt = value["fav_novel_cnt"].as_u64().map(|n| n as u32),
+                "imp" => novel.impression_cnt = value["impression_cnt"].as_u64().map(|n| n as u32),
+                "r" => novel.review_cnt = value["review_cnt"].as_u64().map(|n| n as u32),
+                "a" => novel.all_point = value["all_point"].as_u64().map(|n| n as u32),
+                "ah" => novel.all_hyoka_cnt = value["all_hyoka_cnt"].as_u64().map(|n| n as u32),
+                "sa" => novel.sasie_cnt = value["sasie_cnt"].as_u64().map(|n| n as u32),
+                "ka" => novel.kaiwaritu = value["kaiwaritu"].as_u64().map(|n| n as u8),
+                "nu" => novel.novelupdated_at = value["novelupdated_at"].as_str().map(|s| s.to_string()),
+                "ua" => novel.updated_at = value["updated_at"].as_str().map(|s| s.to_string()),
+                _ => {}
+            }
+        }
+
+        if value.get("weekly_unique").is_some() {
+            novel.weekly_unique = value["weekly_unique"].as_u64().map(|n| n as u32);
+        }
+
+        Ok(novel)
     }
 }
 

@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use serde_json;
+use flate2::read::GzDecoder;
+use std::io::Read;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NarouRankingApiRequest {
@@ -66,7 +68,16 @@ impl NarouRankingApiClient {
             .send()
             .await?;
 
-        let text = response.text().await?;
+        let body_bytes = response.bytes().await?;
+        
+        let text = if params.gzip.is_some() {
+            let mut decoder = GzDecoder::new(&body_bytes[..]);
+            let mut decompressed = String::new();
+            decoder.read_to_string(&mut decompressed)?;
+            decompressed
+        } else {
+            String::from_utf8(body_bytes.to_vec())?
+        };
         
         let out_format = params.out.as_deref().unwrap_or("yaml");
         
@@ -76,7 +87,18 @@ impl NarouRankingApiClient {
                 let rankings = Self::parse_json_response(data)?;
                 Ok(rankings)
             }
-            "yaml" | _ => {
+            "yaml" => {
+                let data: serde_yaml::Value = serde_yaml::from_str(&text)?;
+                let rankings = Self::parse_yaml_response(data)?;
+                Ok(rankings)
+            }
+            "php" => {
+                return Err("PHP serialize format is not implemented".into());
+            }
+            "jsonp" => {
+                return Err("JSONP format is not implemented".into());
+            }
+            _ => {
                 let data: serde_yaml::Value = serde_yaml::from_str(&text)?;
                 let rankings = Self::parse_yaml_response(data)?;
                 Ok(rankings)
