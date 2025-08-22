@@ -86,7 +86,8 @@ impl ApiRequest for UserRequest {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(default)]
 pub struct NarouUserInfo {
     pub userid: Option<u32>,
     pub name: Option<String>,
@@ -179,42 +180,5 @@ impl ApiClient for UserApiClient {
 
     fn base_url(&self) -> &str {
         "https://api.syosetu.com/userapi/api/"
-    }
-
-    fn build_query_params(&self, request: &Self::Request) -> Vec<(String, String)> {
-        let mut params = request.to_query_params();
-        
-        if let Some(ref of_fields) = request.of {
-            let mapped = self.map_of_fields(of_fields);
-            if let Some(index) = params.iter().position(|(k, _)| k == "of") {
-                params[index].1 = mapped;
-            }
-        }
-        
-        params
-    }
-}
-
-impl UserApiClient {
-    fn map_of_fields(&self, of_fields: &str) -> String {
-        let fields: Vec<&str> = of_fields.split('-').collect();
-        let mut mapped_fields = Vec::new();
-        
-        for field in fields {
-            let mapped = match field {
-                "u" => "userid",
-                "n" => "name",
-                "y" => "yomikata",
-                "n1" => "name1st",
-                "nc" => "novel_cnt",
-                "rc" => "review_cnt",
-                "nl" => "novel_length",
-                "sg" => "sum_global_point",
-                _ => field,
-            };
-            mapped_fields.push(mapped);
-        }
-        
-        mapped_fields.join("-")
     }
 }

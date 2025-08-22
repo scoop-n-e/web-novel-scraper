@@ -185,7 +185,8 @@ impl crate::api::common::request::ApiRequest for NarouRequest {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(default)]
 pub struct NarouNovelInfo {
     pub title: Option<String>,
     pub ncode: Option<String>,
@@ -311,71 +312,4 @@ impl ApiClient for NarouApiClient {
         "https://api.syosetu.com/novelapi/api/"
     }
 
-    fn build_query_params(&self, request: &Self::Request) -> Vec<(String, String)> {
-        let mut params = request.to_query_params();
-        
-        if let Some(ref of_fields) = request.of {
-            let mapped = self.map_of_fields(of_fields);
-            if let Some(index) = params.iter().position(|(k, _)| k == "of") {
-                params[index].1 = mapped;
-            }
-        }
-        
-        params
-    }
-}
-
-impl NarouApiClient {
-    fn map_of_fields(&self, of_fields: &str) -> String {
-        let fields: Vec<&str> = of_fields.split('-').collect();
-        let mut mapped_fields = Vec::new();
-        
-        for field in fields {
-            let mapped = match field {
-                "t" => "title",
-                "n" => "ncode",
-                "u" => "userid",
-                "w" => "writer",
-                "s" => "story",
-                "bg" => "biggenre",
-                "g" => "genre",
-                "gp" => "global_point",
-                "dp" => "daily_point",
-                "wp" => "weekly_point",
-                "mp" => "monthly_point",
-                "qp" => "quarter_point",
-                "yp" => "yearly_point",
-                "f" => "fav_novel_cnt",
-                "im" => "impression_cnt",
-                "r" => "review_cnt",
-                "a" => "all_point",
-                "ah" => "all_hyoka_cnt",
-                "sa" => "sasie_cnt",
-                "ka" => "kaiwaritu",
-                "nu" => "novelupdated_at",
-                "ua" => "updated_at",
-                "nt" => "novel_type",
-                "e" => "end",
-                "ga" => "general_all_no",
-                "l" => "length",
-                "ti" => "time",
-                "i" => "isstop",
-                "ir" => "isr15",
-                "ibl" => "isbl",
-                "igl" => "isgl",
-                "izk" => "iszankoku",
-                "its" => "istensei",
-                "iti" => "istenni",
-                "gf" => "general_firstup",
-                "gl" => "general_lastup",
-                "k" => "keyword",
-                "gs" => "gensaku",
-                "wu" => "weekly_unique",
-                _ => field,
-            };
-            mapped_fields.push(mapped);
-        }
-        
-        mapped_fields.join("-")
-    }
 }
